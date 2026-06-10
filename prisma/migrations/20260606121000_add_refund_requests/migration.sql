@@ -1,0 +1,13 @@
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'RefundRequestStatus') THEN
+    CREATE TYPE "RefundRequestStatus" AS ENUM ('NONE', 'REQUESTED', 'APPROVED', 'REJECTED');
+  END IF;
+END $$;
+
+ALTER TABLE "Order" ADD COLUMN IF NOT EXISTS "refundRequestStatus" "RefundRequestStatus" NOT NULL DEFAULT 'NONE';
+ALTER TABLE "Order" ADD COLUMN IF NOT EXISTS "refundRequestedAt" TIMESTAMP(3);
+ALTER TABLE "Order" ADD COLUMN IF NOT EXISTS "refundReason" TEXT;
+ALTER TABLE "Order" ADD COLUMN IF NOT EXISTS "refundResolutionNote" TEXT;
+ALTER TABLE "Order" ADD COLUMN IF NOT EXISTS "refundResolvedAt" TIMESTAMP(3);
+ALTER TABLE "Order" ADD COLUMN IF NOT EXISTS "refundStripeRefundId" TEXT;

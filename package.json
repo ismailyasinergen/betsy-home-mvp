@@ -1,0 +1,45 @@
+{
+  "name": "betsy-home-mvp-starter",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --webpack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio",
+    "seed": "tsx prisma/seed.ts",
+    "readiness": "node scripts/check-production-readiness.cjs",
+    "notifications:test": "node -e \"fetch('http://localhost:3000/api/notifications/test').then(r=>r.text()).then(console.log)\"",
+    "notifications:event": "node scripts/test-notification-event.cjs"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "@stripe/stripe-js": "latest",
+    "@supabase/supabase-js": "latest",
+    "next": "latest",
+    "qrcode": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "stripe": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/qrcode": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "^10.4.20",
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "postcss": "^8.4.49",
+    "prisma": "^6.19.3",
+    "tailwindcss": "^3.4.17",
+    "tsx": "latest",
+    "typescript": "latest"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  }
+}

@@ -146,15 +146,19 @@ export function startGoogleLogin(request: NextRequest) {
   url.searchParams.set("prompt", "select_account");
 
   const response = NextResponse.redirect(url);
+    const isProductionHttps = getAppUrl().startsWith("https://");
+
   response.cookies.set(GOOGLE_STATE_COOKIE, state, {
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: isProductionHttps ? "none" : "lax",
+    secure: isProductionHttps,
     path: "/",
     maxAge: TEN_MINUTES
   });
   response.cookies.set(GOOGLE_NEXT_COOKIE, next, {
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: isProductionHttps ? "none" : "lax",
+    secure: isProductionHttps,
     path: "/",
     maxAge: TEN_MINUTES
   });

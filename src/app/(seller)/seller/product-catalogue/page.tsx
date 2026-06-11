@@ -6,6 +6,8 @@ export const dynamic = "force-dynamic";
 
 export default async function ProductCataloguePage() {
   const { shop, products, catalogues } = await getCatalogueBuilderData();
+  const catalogueItems = (catalogues ?? []) as any[];
+  const catalogueProducts = (products ?? []) as any[];
 
   if (!shop) {
     return (
@@ -31,7 +33,7 @@ export default async function ProductCataloguePage() {
           <div className="mt-5 grid gap-4">
             <label className="grid gap-2">
               <span className="text-sm font-bold">Catalogue title</span>
-              <input name="catalogueTitle" className="rounded-2xl border border-sand p-3 outline-none focus:border-clay" defaultValue={`${shop.shopName} Product Catalogue`} />
+              <input name="catalogueTitle" className="rounded-2xl border border-sand p-3 outline-none focus:border-clay" defaultValue={`${(shop as any).shopName} Product Catalogue`} />
             </label>
             <label className="grid gap-2">
               <span className="text-sm font-bold">Subtitle</span>
@@ -62,10 +64,10 @@ export default async function ProductCataloguePage() {
                 <p className="text-sm text-charcoal/60">Select products to include. If none are selected, all active products are included.</p>
               </div>
               <div className="grid max-h-80 gap-3 overflow-auto rounded-3xl border border-sand p-4">
-                {products.length === 0 ? (
+                {catalogueProducts.length === 0 ? (
                   <p className="text-sm text-charcoal/60">No active products found. Publish at least one product first.</p>
                 ) : (
-                  products.map((product) => (
+                  catalogueProducts.map((product) => (
                     <label key={product.id} className="flex items-center gap-3 rounded-2xl border border-sand bg-white p-3">
                       <input name="productIds" type="checkbox" value={product.id} defaultChecked />
                       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -89,13 +91,13 @@ export default async function ProductCataloguePage() {
           <h2 className="text-2xl font-bold">Recent catalogues</h2>
           <p className="mt-2 text-sm text-charcoal/60">Open a catalogue, then use the print button to save it as a PDF.</p>
           <div className="mt-5 grid gap-3">
-            {catalogues.length === 0 ? (
+            {catalogueItems.length === 0 ? (
               <div className="rounded-3xl bg-cream p-6">
                 <p className="font-bold">No catalogues yet</p>
                 <p className="mt-2 text-sm text-charcoal/60">Your generated catalogues will appear here.</p>
               </div>
             ) : (
-              catalogues.map((catalogue) => (
+              catalogueItems.map((catalogue) => (
                 <Link key={catalogue.id} href={`/seller/product-catalogue/${catalogue.id}`} className="rounded-3xl border border-sand p-4 hover:border-clay">
                   <span className="block font-bold">{catalogue.catalogueTitle}</span>
                   <span className="mt-1 block text-sm text-charcoal/60">{getTemplateLabel(catalogue.templateType)} · {catalogue.selectedProductIds.length} products</span>

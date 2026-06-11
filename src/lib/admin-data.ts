@@ -172,6 +172,72 @@ export async function getAdminPaymentsData() {
   return { orders, payouts, shopsWithoutStripe, paymentStatusCounts };
 }
 
+export async function getAdminRefundsData() {
+  const orders = await prisma.order.findMany({
+    where: {
+      refundRequestStatus: {
+        not: "NONE"
+      }
+    },
+    include: {
+      buyer: {
+        select: {
+          email: true
+        }
+      },
+      shop: {
+        select: {
+          shopName: true,
+          seller: {
+            select: {
+              email: true
+            }
+          }
+        }
+      },
+      items: {
+        select: {
+          id: true,
+          quantity: true,
+          titleSnapshot: true,
+          priceSnapshot: true
+        }
+      }
+    },
+    orderBy: [
+      {
+        refundRequestedAt: "desc"
+      },
+      {
+        createdAt: "desc"
+      }
+    ]
+  });
+
+  const requestedRefunds = orders.filter((order) => order.refundRequestStatus === "REQUESTED").length;
+  const approvedRefunds = orders.filter((order) => order.refundRequestStatus === "APPROVED").length;
+  const rejectedRefunds = orders.filter((order) => order.refundRequestStatus === "REJECTED").length;
+  const manualFollowUps = orders.filter(
+    (order) =>
+      order.refundRequestStatus === "APPROVED" &&
+      order.paymentStatus === "REFUNDED" &&
+      !order.refundStripeRefundId
+  ).length;
+
+  const refundGrossValue = orders.reduce((sum, order) => sum + Number(order.total ?? 0), 0);
+  const refundPlatformFees = orders.reduce((sum, order) => sum + Number(order.platformFee ?? 0), 0);
+
+  return {
+    requestedRefunds,
+    approvedRefunds,
+    rejectedRefunds,
+    manualFollowUps,
+    refundGrossValue,
+    refundPlatformFees,
+    orders
+  };
+}
+
 export async function getAdminReportsData() {
   const topShops = await prisma.shop.findMany({
     include: { orders: { where: { paymentStatus: PaymentStatus.PAID }, select: { total: true } }, _count: { select: { products: true, reviews: true } } },

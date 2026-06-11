@@ -17,6 +17,7 @@ function formatDate(date: Date) {
 export default async function SellerConversationPage({ params }: { params: Promise<{ customerId: string }> }) {
   const { customerId } = await params;
   const { shop, customer, messages } = await getSellerConversation(customerId);
+  const messageItems = (messages ?? []) as any[];
 
   if (!shop || !customer) {
     notFound();
@@ -28,19 +29,19 @@ export default async function SellerConversationPage({ params }: { params: Promi
         <div>
           <Link href="/seller/messages" className="text-sm font-bold text-clay">← Back to messages</Link>
           <p className="mt-6 text-sm font-bold uppercase tracking-[0.2em] text-clay">Buyer conversation</p>
-          <h1 className="mt-2 text-4xl font-bold">{customer.name ?? customer.email}</h1>
-          <p className="mt-2 text-charcoal/65">{customer.email} · Shop: {shop.shopName}</p>
+          <h1 className="mt-2 text-4xl font-bold">{(customer as any).name ?? (customer as any).email}</h1>
+          <p className="mt-2 text-charcoal/65">{(customer as any).email} · Shop: {(shop as any).shopName}</p>
         </div>
         <Link href="/seller/orders" className="rounded-full border border-clay px-5 py-3 font-bold text-clay">Check orders</Link>
       </div>
 
       <section className="mt-8 rounded-3xl border border-sand bg-white p-5 shadow-sm">
-        {messages.length === 0 ? (
+        {messageItems.length === 0 ? (
           <p className="rounded-2xl bg-cream p-4 text-charcoal/65">No messages yet.</p>
         ) : (
           <div className="grid gap-4">
-            {messages.map((message) => {
-              const isSeller = message.senderId === shop.sellerId;
+            {messageItems.map((message) => {
+              const isSeller = message.senderId === (shop as any).sellerId;
               return (
                 <article key={message.id} className={`flex ${isSeller ? "justify-end" : "justify-start"}`}>
                   <div className={`max-w-2xl rounded-3xl p-4 ${isSeller ? "bg-clay text-white" : "bg-cream text-charcoal"}`}>
@@ -55,7 +56,7 @@ export default async function SellerConversationPage({ params }: { params: Promi
       </section>
 
       <form action={sellerReplyMessageAction} className="mt-6 rounded-3xl border border-sand bg-white p-5 shadow-sm">
-        <input type="hidden" name="customerId" value={customer.id} />
+        <input type="hidden" name="customerId" value={(customer as any).id} />
         <label htmlFor="message" className="font-bold">Reply to customer</label>
         <textarea id="message" name="message" required className="mt-3 min-h-32 w-full rounded-3xl border border-sand bg-cream p-4 outline-none focus:border-clay" placeholder="Write your reply..." />
         <button className="mt-4 rounded-full bg-clay px-6 py-3 font-bold text-white shadow-soft">Send reply</button>

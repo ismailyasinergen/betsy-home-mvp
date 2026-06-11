@@ -22,7 +22,7 @@ function paymentBadgeClass(status: string) {
     return "bg-green-50 text-green-700";
   }
 
-  if ([PaymentStatus.FAILED, PaymentStatus.REFUNDED, PaymentStatus.DISPUTED].includes(status as PaymentStatus)) {
+  if (([PaymentStatus.FAILED, PaymentStatus.REFUNDED, PaymentStatus.DISPUTED] as PaymentStatus[]).includes(status as PaymentStatus)) {
     return "bg-red-50 text-red-700";
   }
 

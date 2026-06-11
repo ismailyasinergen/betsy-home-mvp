@@ -21,7 +21,7 @@ export default function HomePage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {products.slice(0, 4).map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product as any} />
             ))}
           </div>
         </section>
@@ -47,7 +47,7 @@ export default function HomePage() {
         <section className="container-page py-10">
           <SectionHeader eyebrow="Featured" title="Fresh finds for your home" />
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {products.map((product) => <ProductCard key={product.id} product={product} />)}
+            {products.map((product) => <ProductCard key={product.id} product={product as any} />)}
           </div>
         </section>
 

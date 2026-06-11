@@ -93,7 +93,7 @@ export async function createSellerListing(formData: FormData) {
 
   await prisma.product.create({
     data: {
-      shopId: shop.id,
+      shopId: (shop as any).id,
       title,
       slug,
       description,
@@ -144,7 +144,7 @@ export async function updateSellerListing(productId: string, formData: FormData)
   const existingProduct = await prisma.product.findFirst({
     where: {
       id: productId,
-      shopId: shop.id
+      shopId: (shop as any).id
     },
     include: {
       images: {
@@ -261,7 +261,7 @@ export async function changeSellerListingStatus(productId: string, status: Produ
   const product = await prisma.product.findFirst({
     where: {
       id: productId,
-      shopId: shop.id
+      shopId: (shop as any).id
     }
   });
 
@@ -291,7 +291,7 @@ export async function deleteSellerListing(productId: string) {
   const product = await prisma.product.findFirst({
     where: {
       id: productId,
-      shopId: shop.id
+      shopId: (shop as any).id
     }
   });
 

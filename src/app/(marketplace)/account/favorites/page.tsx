@@ -28,7 +28,7 @@ export default async function CustomerFavoritesPage() {
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {favorites.map((product) => (
                 <div key={product.id} className="grid gap-3">
-                  <ProductCard product={product} />
+                  <ProductCard product={product as any} />
                   <form action={removeProductFromFavoritesAction}>
                     <input type="hidden" name="productId" value={product.id} />
                     <button className="w-full rounded-full border border-sand bg-white px-4 py-2 text-sm font-bold text-charcoal/70 hover:border-clay hover:text-clay">Remove from favorites</button>

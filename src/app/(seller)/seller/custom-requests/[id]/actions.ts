@@ -26,7 +26,7 @@ export async function updateCustomRequestStatusAction(formData: FormData) {
   await prisma.customOrderRequest.updateMany({
     where: {
       id: requestId,
-      shopId: shop.id
+      shopId: (shop as any).id
     },
     data: {
       status: status as CustomOrderStatus
@@ -53,7 +53,7 @@ export async function replyToCustomRequestAction(formData: FormData) {
   const request = await prisma.customOrderRequest.findFirst({
     where: {
       id: requestId,
-      shopId: shop.id
+      shopId: (shop as any).id
     },
     include: {
       buyer: true,
@@ -69,9 +69,9 @@ export async function replyToCustomRequestAction(formData: FormData) {
 
   await prisma.message.create({
     data: {
-      senderId: shop.sellerId,
+      senderId: (shop as any).sellerId,
       receiverId: request.buyerId,
-      shopId: shop.id,
+      shopId: (shop as any).id,
       message: finalMessage
     }
   });

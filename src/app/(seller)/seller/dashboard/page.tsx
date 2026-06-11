@@ -18,7 +18,7 @@ export default async function SellerDashboardPage() {
   if (shop) {
     openOrders = await prisma.order.count({
       where: {
-        shopId: shop.id,
+        shopId: (shop as any).id,
         shippingStatus: {
           in: [ShippingStatus.NEW, ShippingStatus.PROCESSING]
         },
@@ -30,7 +30,7 @@ export default async function SellerDashboardPage() {
 
     const paidOrders = await prisma.order.findMany({
       where: {
-        shopId: shop.id,
+        shopId: (shop as any).id,
         paymentStatus: PaymentStatus.PAID
       },
       select: {
@@ -50,7 +50,7 @@ export default async function SellerDashboardPage() {
     inventory.metrics.needsReviewProducts > 0 ? `${inventory.metrics.needsReviewProducts} product(s) need review.` : null,
     openOrders > 0 ? `${openOrders} order(s) need fulfillment.` : null,
     unreadMessages > 0 ? `${unreadMessages} message(s) need a reply.` : null,
-    shop && !shop.stripeAccountId ? "Connect Stripe to receive payouts." : null
+    shop && !(shop as any).stripeAccountId ? "Connect Stripe to receive payouts." : null
   ].filter(Boolean) as string[];
 
   return (
@@ -59,7 +59,7 @@ export default async function SellerDashboardPage() {
         <div>
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-clay">Seller Studio</p>
           <h1 className="mt-2 text-4xl font-bold">Dashboard</h1>
-          <p className="mt-2 text-charcoal/70">{shop ? `Today’s overview for ${shop.shopName}.` : "No seller shop found."}</p>
+          <p className="mt-2 text-charcoal/70">{shop ? `Today’s overview for ${(shop as any).shopName}.` : "No seller shop found."}</p>
         </div>
         <div className="flex flex-wrap gap-3">
           <Link href="/seller/inventory" className="rounded-full border border-clay px-5 py-3 font-bold text-clay">Manage inventory</Link>
@@ -69,9 +69,9 @@ export default async function SellerDashboardPage() {
 
       <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Paid order value" value={`$${pendingRevenue.toFixed(2)}`} helper="After platform fees in demo mode" />
-        <StatCard label="Open orders" value={openOrders} helper="New or processing orders" />
-        <StatCard label="Active listings" value={inventory.metrics.activeProducts} helper={`${inventory.metrics.totalUnits} total units`} />
-        <StatCard label="Unread messages" value={unreadMessages} helper="Customer replies and inquiries" />
+        <StatCard label="Open orders" value={String(openOrders)} helper="New or processing orders" />
+        <StatCard label="Active listings" value={String(inventory.metrics.activeProducts)} helper={`${inventory.metrics.totalUnits} total units`} />
+        <StatCard label="Unread messages" value={String(unreadMessages)} helper="Customer replies and inquiries" />
       </div>
 
       <div className="mt-8 grid gap-6 xl:grid-cols-[1fr_420px]">

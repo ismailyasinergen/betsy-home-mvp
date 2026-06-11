@@ -6,6 +6,10 @@ export const dynamic = "force-dynamic";
 
 export default async function NewListingPage() {
   const { shop, categories, rooms, styles, shippingProfiles } = await getSellerListingFormData();
+  const editableCategories = (categories ?? []) as any[];
+  const editableRooms = (rooms ?? []) as any[];
+  const editableStyles = (styles ?? []) as any[];
+  const editableShippingProfiles = (shippingProfiles ?? []) as any[];
 
   if (!shop) {
     return (
@@ -23,7 +27,7 @@ export default async function NewListingPage() {
         <div>
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-clay">Listings</p>
           <h1 className="mt-2 text-4xl font-bold">Add new product</h1>
-          <p className="mt-2 text-charcoal/70">Saving to shop: {shop.shopName}</p>
+          <p className="mt-2 text-charcoal/70">Saving to shop: {(shop as any).shopName}</p>
         </div>
         <Link href="/seller/listings" className="rounded-full border border-clay px-5 py-3 font-bold text-clay">Back to listings</Link>
       </div>
@@ -44,21 +48,21 @@ export default async function NewListingPage() {
               <span className="text-sm font-bold">Category *</span>
               <select name="categoryId" required className="rounded-2xl border border-sand p-3 outline-none focus:border-clay" defaultValue="">
                 <option value="" disabled>Select category</option>
-                {categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
+                {editableCategories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}
               </select>
             </label>
             <label className="grid gap-2">
               <span className="text-sm font-bold">Room</span>
               <select name="roomId" className="rounded-2xl border border-sand p-3 outline-none focus:border-clay" defaultValue="">
                 <option value="">No room selected</option>
-                {rooms.map((room) => <option key={room.id} value={room.id}>{room.name}</option>)}
+                {editableRooms.map((room) => <option key={room.id} value={room.id}>{room.name}</option>)}
               </select>
             </label>
             <label className="grid gap-2">
               <span className="text-sm font-bold">Style</span>
               <select name="styleId" className="rounded-2xl border border-sand p-3 outline-none focus:border-clay" defaultValue="">
                 <option value="">No style selected</option>
-                {styles.map((style) => <option key={style.id} value={style.id}>{style.name}</option>)}
+                {editableStyles.map((style) => <option key={style.id} value={style.id}>{style.name}</option>)}
               </select>
             </label>
           </div>
@@ -81,9 +85,9 @@ export default async function NewListingPage() {
             </label>
             <label className="grid gap-2">
               <span className="text-sm font-bold">Shipping profile</span>
-              <select name="shippingProfileId" className="rounded-2xl border border-sand p-3 outline-none focus:border-clay" defaultValue={shippingProfiles[0]?.id ?? ""}>
+              <select name="shippingProfileId" className="rounded-2xl border border-sand p-3 outline-none focus:border-clay" defaultValue={editableShippingProfiles[0]?.id ?? ""}>
                 <option value="">No shipping profile</option>
-                {shippingProfiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.profileName}</option>)}
+                {editableShippingProfiles.map((profile) => <option key={profile.id} value={profile.id}>{profile.profileName}</option>)}
               </select>
             </label>
           </div>

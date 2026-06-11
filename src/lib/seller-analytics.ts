@@ -56,7 +56,7 @@ function itemRevenueCents(item: AnyRecord, order: AnyRecord): number {
   const unit = cents(item.unitPriceCents ?? item.priceCents ?? item.product?.priceCents ?? 0);
   if (unit > 0) return unit * quantity;
 
-  const orderItems = Array.isArray(order.items) ? order.items : [];
+  const orderItems = Array.isArray((order as any).items) ? (order as any).items : [];
   if (orderItems.length === 1) return orderTotalCents(order);
   return 0;
 }
@@ -153,7 +153,7 @@ export async function getSellerAnalyticsData(userId: string) {
     };
   }
 
-  const shopId = shop.id;
+  const shopId = (shop as any).id;
 
   const orders = await safe(
     db.order.findMany({
@@ -181,7 +181,7 @@ export async function getSellerAnalyticsData(userId: string) {
     []
   );
 
-  const products = Array.isArray(shop.products) ? shop.products : [];
+  const products = Array.isArray((shop as any).products) ? (shop as any).products : [];
 
   const paidOrders = orders.filter((order: AnyRecord) => paymentStatus(order) === "PAID");
   const pendingOrders = orders.filter((order: AnyRecord) => paymentStatus(order) === "PENDING");
@@ -200,7 +200,7 @@ export async function getSellerAnalyticsData(userId: string) {
 
   const topProductMap = new Map<string, AnyRecord>();
   for (const order of paidOrders) {
-    for (const item of Array.isArray(order.items) ? order.items : []) {
+    for (const item of Array.isArray((order as any).items) ? (order as any).items : []) {
       const product = item.product ?? {};
       const key = String(product.id ?? item.productId ?? productTitle(product));
       const current = topProductMap.get(key) ?? {
@@ -264,7 +264,7 @@ export async function getSellerAnalyticsData(userId: string) {
   };
 
   return {
-    shop: { ...shop, displayName: shopName(shop) },
+    shop: { ...((shop as any) ?? {}), displayName: shopName(shop as any) },
     orders,
     reviews,
     products: inventory,

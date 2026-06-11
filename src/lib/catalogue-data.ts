@@ -36,7 +36,7 @@ export async function getCatalogueBuilderData() {
   const [products, catalogues] = await Promise.all([
     prisma.product.findMany({
       where: {
-        shopId: shop.id,
+        shopId: (shop as any).id,
         status: ProductStatus.ACTIVE
       },
       include: catalogueProductInclude,
@@ -46,7 +46,7 @@ export async function getCatalogueBuilderData() {
     }),
     prisma.pdfCatalogue.findMany({
       where: {
-        shopId: shop.id
+        shopId: (shop as any).id
       },
       orderBy: {
         createdAt: "desc"

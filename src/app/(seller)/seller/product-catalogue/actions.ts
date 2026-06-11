@@ -38,7 +38,7 @@ export async function createSellerCatalogue(formData: FormData) {
     throw new Error("No seller shop was found. Run npm run seed first, then try again.");
   }
 
-  const catalogueTitle = getString(formData, "catalogueTitle") || `${shop.shopName} Product Catalogue`;
+  const catalogueTitle = getString(formData, "catalogueTitle") || `${(shop as any).shopName} Product Catalogue`;
   const catalogueSubtitle = getOptionalString(formData, "catalogueSubtitle");
   const templateType = getTemplate(getString(formData, "templateType"));
   let selectedProductIds = formData
@@ -48,7 +48,7 @@ export async function createSellerCatalogue(formData: FormData) {
   if (selectedProductIds.length === 0) {
     const activeProducts = await prisma.product.findMany({
       where: {
-        shopId: shop.id,
+        shopId: (shop as any).id,
         status: ProductStatus.ACTIVE
       },
       select: {
@@ -61,7 +61,7 @@ export async function createSellerCatalogue(formData: FormData) {
 
   const catalogue = await prisma.pdfCatalogue.create({
     data: {
-      shopId: shop.id,
+      shopId: (shop as any).id,
       catalogueTitle,
       catalogueSubtitle,
       templateType,

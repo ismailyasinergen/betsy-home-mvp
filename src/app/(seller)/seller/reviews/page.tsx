@@ -19,6 +19,7 @@ function Stars({ value }: { value: number }) {
 export default async function SellerReviewsPage({ searchParams }: { searchParams?: Promise<{ replied?: string }> }) {
   const params = searchParams ? await searchParams : {};
   const { shop, reviews, averageRating, unansweredCount } = await getSellerReviewsData();
+  const reviewItems = (reviews ?? []) as any[];
 
   return (
     <main className="p-8">
@@ -38,7 +39,7 @@ export default async function SellerReviewsPage({ searchParams }: { searchParams
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             <div className="rounded-3xl border border-sand bg-white p-6 shadow-sm">
               <p className="text-sm text-charcoal/60">Shop</p>
-              <p className="mt-2 text-2xl font-bold">{shop.shopName}</p>
+              <p className="mt-2 text-2xl font-bold">{(shop as any).shopName}</p>
             </div>
             <div className="rounded-3xl border border-sand bg-white p-6 shadow-sm">
               <p className="text-sm text-charcoal/60">Average rating</p>
@@ -55,10 +56,10 @@ export default async function SellerReviewsPage({ searchParams }: { searchParams
           ) : null}
 
           <section className="mt-8 grid gap-5">
-            {reviews.length === 0 ? (
+            {reviewItems.length === 0 ? (
               <div className="rounded-3xl border border-sand bg-white p-8 text-charcoal/70 shadow-sm">No reviews yet. Customer reviews will appear here after paid orders.</div>
             ) : (
-              reviews.map((review) => (
+              reviewItems.map((review) => (
                 <article key={review.id} className="rounded-3xl border border-sand bg-white p-6 shadow-sm">
                   <div className="grid gap-5 lg:grid-cols-[110px_1fr]">
                     <div className="overflow-hidden rounded-3xl bg-cream">

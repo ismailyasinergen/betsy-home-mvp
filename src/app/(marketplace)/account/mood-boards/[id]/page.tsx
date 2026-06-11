@@ -79,7 +79,7 @@ export default async function CustomerMoodBoardDetailPage({ params }: { params: 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {board.products.map((product) => (
                 <div key={product.id} className="grid gap-3">
-                  <ProductCard product={product} />
+                  <ProductCard product={product as any} />
                   <form action={removeProductFromMoodBoardAction}>
                     <input type="hidden" name="boardId" value={board.id} />
                     <input type="hidden" name="productId" value={product.id} />

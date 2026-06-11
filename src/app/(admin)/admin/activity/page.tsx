@@ -4,6 +4,11 @@ import { getAdminActivityData } from "@/lib/admin-data";
 
 export const dynamic = "force-dynamic";
 
+type RefundActivityItem = {
+  refundRequestStatus?: string | null;
+};
+
+
 function money(value: unknown) {
   return Number(value ?? 0).toFixed(2);
 }
@@ -51,12 +56,18 @@ function statusBadge({ label, tone }: { label: string; tone?: "green" | "red" | 
 
 export default async function AdminActivityPage() {
   const { recentOrders, refundEvents, recentReviews, recentMessages, recentCustomRequests, productAlerts } = await getAdminActivityData();
+  const recentOrderEvents = (recentOrders ?? []) as any[];
+  const refundActivityEvents = (refundEvents ?? []) as any[];
+  const recentReviewEvents = (recentReviews ?? []) as any[];
+  const recentMessageEvents = (recentMessages ?? []) as any[];
+  const customRequestEvents = (recentCustomRequests ?? []) as any[];
+  const productAlertEvents = (productAlerts ?? []) as any[];
 
   const needsAction =
-    (refundEvents ?? []).filter((order) => order.refundRequestStatus === RefundRequestStatus.REQUESTED).length +
-    (recentReviews ?? []).filter((review) => !review.sellerResponse).length +
-    (recentCustomRequests ?? []).filter((request) => request.status === "OPEN").length +
-    (productAlerts ?? []).length;
+    refundActivityEvents.filter((order) => order.refundRequestStatus === RefundRequestStatus.REQUESTED).length +
+    recentReviewEvents.filter((review) => !review.sellerResponse).length +
+    customRequestEvents.filter((request) => request.status === "OPEN").length +
+    productAlertEvents.length;
 
   return (
     <div>
@@ -69,19 +80,19 @@ export default async function AdminActivityPage() {
       <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         <div className="rounded-3xl border border-sand bg-white p-5 shadow-sm">
           <p className="text-sm text-charcoal/60">Recent orders</p>
-          <p className="mt-2 text-3xl font-bold">{recentOrders.length}</p>
+          <p className="mt-2 text-3xl font-bold">{recentOrderEvents.length}</p>
         </div>
         <div className="rounded-3xl border border-sand bg-white p-5 shadow-sm">
           <p className="text-sm text-charcoal/60">Refund activity</p>
-          <p className="mt-2 text-3xl font-bold">{refundEvents.length}</p>
+          <p className="mt-2 text-3xl font-bold">{refundActivityEvents.length}</p>
         </div>
         <div className="rounded-3xl border border-sand bg-white p-5 shadow-sm">
           <p className="text-sm text-charcoal/60">Latest reviews</p>
-          <p className="mt-2 text-3xl font-bold">{recentReviews.length}</p>
+          <p className="mt-2 text-3xl font-bold">{recentReviewEvents.length}</p>
         </div>
         <div className="rounded-3xl border border-sand bg-white p-5 shadow-sm">
           <p className="text-sm text-charcoal/60">Product alerts</p>
-          <p className="mt-2 text-3xl font-bold text-red-600">{(productAlerts ?? []).length}</p>
+          <p className="mt-2 text-3xl font-bold text-red-600">{productAlertEvents.length}</p>
         </div>
         <div className="rounded-3xl border border-sand bg-white p-5 shadow-sm">
           <p className="text-sm text-charcoal/60">Needs action</p>
@@ -96,7 +107,7 @@ export default async function AdminActivityPage() {
             <Link href="/admin/orders" className="rounded-full border border-clay px-4 py-2 text-sm font-bold text-clay">View orders</Link>
           </div>
           <div className="mt-4 grid gap-3">
-            {(recentOrders ?? []).map((order) => (
+            {recentOrderEvents.map((order) => (
               <div key={order.id} className="rounded-2xl bg-cream p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="font-bold">{order.orderNumber}</p>
@@ -108,10 +119,10 @@ export default async function AdminActivityPage() {
                   {statusBadge({ label: `Shipping: ${order.shippingStatus}`, tone: shippingTone(order.shippingStatus) })}
                   {order.refundRequestStatus !== RefundRequestStatus.NONE ? statusBadge({ label: `Refund: ${order.refundRequestStatus}`, tone: refundTone(order.refundRequestStatus) }) : null}
                 </div>
-                <p className="mt-2 text-sm text-charcoal/60">{order.items.map((item) => `${item.quantity} × ${item.titleSnapshot}`).join(" · ")}</p>
+                <p className="mt-2 text-sm text-charcoal/60">{(order.items ?? []).map((item: any) => `${item.quantity} × ${item.titleSnapshot}`).join(" · ")}</p>
               </div>
             ))}
-            {recentOrders.length === 0 ? <p className="text-charcoal/70">No orders yet.</p> : null}
+            {recentOrderEvents.length === 0 ? <p className="text-charcoal/70">No orders yet.</p> : null}
           </div>
         </section>
 
@@ -121,7 +132,7 @@ export default async function AdminActivityPage() {
             <Link href="/admin/refunds" className="rounded-full border border-clay px-4 py-2 text-sm font-bold text-clay">View refunds</Link>
           </div>
           <div className="mt-4 grid gap-3">
-            {(refundEvents ?? []).map((order) => (
+            {refundActivityEvents.map((order) => (
               <div key={order.id} className="rounded-2xl bg-cream p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="font-bold">{order.orderNumber}</p>
@@ -133,7 +144,7 @@ export default async function AdminActivityPage() {
                 {!order.refundStripeRefundId && order.paymentStatus === PaymentStatus.REFUNDED ? <p className="mt-2 text-sm font-bold text-red-700">Manual Stripe follow-up needed</p> : null}
               </div>
             ))}
-            {refundEvents.length === 0 ? <p className="text-charcoal/70">No refund or dispute activity yet.</p> : null}
+            {refundActivityEvents.length === 0 ? <p className="text-charcoal/70">No refund or dispute activity yet.</p> : null}
           </div>
         </section>
 
@@ -143,7 +154,7 @@ export default async function AdminActivityPage() {
             <Link href="/admin/reports" className="rounded-full border border-clay px-4 py-2 text-sm font-bold text-clay">View reports</Link>
           </div>
           <div className="mt-4 grid gap-3">
-            {(recentReviews ?? []).map((review) => (
+            {recentReviewEvents.map((review) => (
               <div key={review.id} className="rounded-2xl bg-cream p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="font-bold">{review.rating}★ · {review.product.title}</p>
@@ -153,14 +164,14 @@ export default async function AdminActivityPage() {
                 <p className="mt-2 line-clamp-3 text-sm text-charcoal/70">{review.comment ?? "No written comment."}</p>
               </div>
             ))}
-            {recentReviews.length === 0 ? <p className="text-charcoal/70">No reviews yet.</p> : null}
+            {recentReviewEvents.length === 0 ? <p className="text-charcoal/70">No reviews yet.</p> : null}
           </div>
         </section>
 
         <section className="rounded-3xl border border-sand bg-white p-6 shadow-sm">
           <h2 className="text-2xl font-bold">Messages & custom requests</h2>
           <div className="mt-4 grid gap-3">
-            {(recentCustomRequests ?? []).map((request) => (
+            {customRequestEvents.map((request) => (
               <div key={request.id} className="rounded-2xl bg-cream p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="font-bold">Custom request · {request.shop.shopName}</p>
@@ -170,7 +181,7 @@ export default async function AdminActivityPage() {
                 <p className="mt-2 line-clamp-2 text-sm text-charcoal/70">{request.message}</p>
               </div>
             ))}
-            {(recentMessages ?? []).map((message) => (
+            {recentMessageEvents.map((message) => (
               <div key={message.id} className="rounded-2xl bg-cream p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="font-bold">Message · {message.shop?.shopName ?? "Marketplace"}</p>
@@ -180,7 +191,7 @@ export default async function AdminActivityPage() {
                 <p className="mt-2 line-clamp-2 text-sm text-charcoal/70">{message.message ?? message.body ?? message.content ?? 'No message text'}</p>
               </div>
             ))}
-            {recentCustomRequests.length === 0 && recentMessages.length === 0 ? <p className="text-charcoal/70">No recent messages or custom requests.</p> : null}
+            {customRequestEvents.length === 0 && recentMessageEvents.length === 0 ? <p className="text-charcoal/70">No recent messages or custom requests.</p> : null}
           </div>
         </section>
 
@@ -190,7 +201,7 @@ export default async function AdminActivityPage() {
             <Link href="/admin/products" className="rounded-full border border-clay px-4 py-2 text-sm font-bold text-clay">View products</Link>
           </div>
           <div className="mt-4 grid gap-3 md:grid-cols-2">
-            {(productAlerts ?? []).map((product) => {
+            {productAlertEvents.map((product) => {
               const alerts = [
                 product.status === ProductStatus.NEEDS_REVIEW ? "Needs review" : null,
                 product.status === ProductStatus.SOLD_OUT ? "Sold out" : null,
@@ -207,7 +218,7 @@ export default async function AdminActivityPage() {
                 </div>
               );
             })}
-            {(productAlerts ?? []).length === 0 ? <p className="text-charcoal/70">No product alerts right now.</p> : null}
+            {productAlertEvents.length === 0 ? <p className="text-charcoal/70">No product alerts right now.</p> : null}
           </div>
         </section>
       </div>

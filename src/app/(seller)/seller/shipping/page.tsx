@@ -35,7 +35,7 @@ export default async function SellerShippingPage() {
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-clay">Shipping</p>
           <h1 className="mt-2 text-4xl font-bold leading-tight md:text-5xl">Shipping profiles</h1>
           <p className="mt-3 max-w-3xl text-charcoal/70">
-            Create reusable shipping rules for {shop.shopName}. New products can use these profiles immediately.
+            Create reusable shipping rules for {(shop as any).shopName}. New products can use these profiles immediately.
           </p>
         </div>
         <Link href="/seller/listings/new" className="shrink-0 rounded-full border border-clay px-5 py-3 text-center font-bold text-clay hover:bg-clay hover:text-white">
@@ -121,10 +121,10 @@ export default async function SellerShippingPage() {
             <p className="mt-2 text-sm leading-6 text-charcoal/65">These profiles are loaded from Supabase through Prisma.</p>
           </div>
 
-          {shippingProfiles.length === 0 ? (
+          {((shippingProfiles ?? []) as any[]).length === 0 ? (
             <div className="rounded-3xl border border-dashed border-sand bg-white p-6 text-charcoal/70">No shipping profiles yet. Create your first profile above.</div>
           ) : (
-            shippingProfiles.map((profile) => (
+            ((shippingProfiles ?? []) as any[]).map((profile: any) => (
               <article key={profile.id} className="min-w-0 rounded-3xl border border-sand bg-white p-5 shadow-sm md:p-6">
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
@@ -157,7 +157,7 @@ export default async function SellerShippingPage() {
                   <p className="font-bold">Excluded countries</p>
                   {profile.excludedCountries.length ? (
                     <div className="mt-3 flex flex-wrap gap-2">
-                      {profile.excludedCountries.map((country) => (
+                      {(profile.excludedCountries ?? []).map((country: any) => (
                         <span key={country.id} className="rounded-full bg-cream px-3 py-1 text-sm text-charcoal/70">{country.countryName}</span>
                       ))}
                     </div>

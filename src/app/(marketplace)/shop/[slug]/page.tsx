@@ -21,7 +21,7 @@ export default async function ShopPage({ params }: { params: Promise<{ slug: str
           </div>
         </section>
         <section className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => <ProductCard key={product.id} product={product} />)}
+          {products.map((product) => <ProductCard key={product.id} product={product as any} />)}
         </section>
       </main>
     </>

@@ -37,7 +37,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
           {products.length > 0 ? (
             <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {products.map((product) => <ProductCard key={product.id} product={product} />)}
+              {products.map((product) => <ProductCard key={product.id} product={product as any} />)}
             </section>
           ) : (
             <section className="rounded-3xl border border-sand bg-white p-8 shadow-sm">

@@ -45,7 +45,7 @@ export async function approveAdminRefundRequestAction(formData: FormData) {
     "Refund/cancellation approved by admin. Confirm Stripe refund manually if needed."
   );
 
-  const shouldMarkRefunded = [PaymentStatus.PAID, PaymentStatus.PARTIALLY_REFUNDED, PaymentStatus.DISPUTED].includes(order.paymentStatus);
+  const shouldMarkRefunded = ([PaymentStatus.PAID, PaymentStatus.PARTIALLY_REFUNDED, PaymentStatus.DISPUTED] as PaymentStatus[]).includes(order.paymentStatus);
 
   await prisma.order.update({
     where: { id: order.id },

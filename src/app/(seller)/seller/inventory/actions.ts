@@ -35,7 +35,7 @@ async function getSellerProduct(productId: string) {
   const product = await prisma.product.findFirst({
     where: {
       id: productId,
-      shopId: shop.id
+      shopId: (shop as any).id
     }
   });
 
@@ -129,7 +129,7 @@ export async function assignInventoryShippingProfile(productId: string, formData
     const profile = await prisma.shippingProfile.findFirst({
       where: {
         id: shippingProfileId,
-        shopId: shop.id
+        shopId: (shop as any).id
       }
     });
 

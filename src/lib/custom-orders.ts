@@ -130,7 +130,7 @@ export async function getSellerCustomRequests() {
   const [requests, total, open, quoted, accepted] = await Promise.all([
     prisma.customOrderRequest.findMany({
       where: {
-        shopId: shop.id
+        shopId: (shop as any).id
       },
       include: {
         buyer: true,
@@ -149,10 +149,10 @@ export async function getSellerCustomRequests() {
         createdAt: "desc"
       }
     }),
-    prisma.customOrderRequest.count({ where: { shopId: shop.id } }),
-    prisma.customOrderRequest.count({ where: { shopId: shop.id, status: CustomOrderStatus.OPEN } }),
-    prisma.customOrderRequest.count({ where: { shopId: shop.id, status: CustomOrderStatus.QUOTED } }),
-    prisma.customOrderRequest.count({ where: { shopId: shop.id, status: CustomOrderStatus.ACCEPTED } })
+    prisma.customOrderRequest.count({ where: { shopId: (shop as any).id } }),
+    prisma.customOrderRequest.count({ where: { shopId: (shop as any).id, status: CustomOrderStatus.OPEN } }),
+    prisma.customOrderRequest.count({ where: { shopId: (shop as any).id, status: CustomOrderStatus.QUOTED } }),
+    prisma.customOrderRequest.count({ where: { shopId: (shop as any).id, status: CustomOrderStatus.ACCEPTED } })
   ]);
 
   return {
@@ -180,7 +180,7 @@ export async function getSellerCustomRequestById(id: string) {
   const request = await prisma.customOrderRequest.findFirst({
     where: {
       id,
-      shopId: shop.id
+      shopId: (shop as any).id
     },
     include: {
       buyer: true,

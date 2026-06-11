@@ -30,6 +30,7 @@ function paymentBadgeClass(status: string) {
 
 export default async function SellerOrdersPage() {
   const { shop, orders } = await getSellerOrders();
+  const orderItems = (orders ?? []) as any[];
   const pendingValue = orders
     .filter((order) => order.paymentStatus === PaymentStatus.PENDING && order.shippingStatus !== ShippingStatus.CANCELLED)
     .reduce((sum, order) => sum + Number(order.total), 0);
@@ -43,7 +44,7 @@ export default async function SellerOrdersPage() {
         <div>
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-clay">Sales</p>
           <h1 className="mt-2 text-4xl font-bold">Orders</h1>
-          <p className="mt-2 text-charcoal/70">{shop ? `Showing orders for ${shop.shopName}.` : "No seller shop found."}</p>
+          <p className="mt-2 text-charcoal/70">{shop ? `Showing orders for ${(shop as any).shopName}.` : "No seller shop found."}</p>
         </div>
         <div className="flex flex-wrap gap-3">
           <div className="rounded-3xl border border-sand bg-white p-4 text-right shadow-sm">
@@ -71,7 +72,7 @@ export default async function SellerOrdersPage() {
             </tr>
           </thead>
           <tbody>
-            {orders.map((order) => (
+            {orderItems.map((order) => (
               <tr key={order.id} className="border-t border-sand align-top">
                 <td className="p-4">
                   <Link href={`/seller/orders/${order.id}`} className="font-bold text-charcoal hover:text-clay">{order.orderNumber}</Link>
@@ -86,7 +87,7 @@ export default async function SellerOrdersPage() {
                 </td>
                 <td className="p-4">
                   <div className="grid gap-1">
-                    {order.items.map((item) => (
+                    {(order.items ?? []).map((item: any) => (
                       <p key={item.id}>{item.quantity} × {item.titleSnapshot}</p>
                     ))}
                   </div>
@@ -100,7 +101,7 @@ export default async function SellerOrdersPage() {
                 </td>
               </tr>
             ))}
-            {orders.length === 0 ? (
+            {orderItems.length === 0 ? (
               <tr>
                 <td colSpan={7} className="p-8 text-center text-charcoal/60">No orders yet. Add an item to cart, validate checkout, then create an order.</td>
               </tr>

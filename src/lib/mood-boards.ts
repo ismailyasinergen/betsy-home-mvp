@@ -50,10 +50,11 @@ type BoardWithDetails = Prisma.MoodBoardGetPayload<{
 }>;
 
 function mapBoardProduct(item: BoardItemWithProduct): ProductCardData & { addedAt: Date } {
-  const product = item.product;
+  const product = item.product as any;
 
   return {
     id: product.id,
+      shopId: product.shopId ?? product.shop?.id ?? "",
     title: product.title,
     slug: product.slug,
     price: Number(product.salePrice ?? product.price),

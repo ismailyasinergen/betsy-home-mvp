@@ -26,7 +26,7 @@ export async function replyToReviewAction(formData: FormData) {
   const review = await prisma.review.findFirst({
     where: {
       id: reviewId,
-      shopId: shop.id
+      shopId: (shop as any).id
     },
     include: {
       product: true

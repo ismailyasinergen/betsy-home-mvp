@@ -57,11 +57,11 @@ export async function getSellerSidebarBadges() {
         : null) ??
       (await safe(db.shop.findFirst(), null));
 
-    if (!shop?.id) {
+    if (!(shop as any)?.id) {
       return emptyBadges;
     }
 
-    const shopId = shop.id;
+    const shopId = (shop as any).id;
 
     const listings = await safe(
       db.product.count({ where: { shopId, status: "NEEDS_REVIEW" } }),

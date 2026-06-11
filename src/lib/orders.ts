@@ -176,7 +176,7 @@ export async function getSellerOrders() {
 
   const orders = await prisma.order.findMany({
     where: {
-      shopId: shop.id
+      shopId: (shop as any).id
     },
     include: {
       items: {
@@ -210,7 +210,7 @@ export async function getSellerOrderById(orderId: string) {
   const order = await prisma.order.findFirst({
     where: {
       id: orderId,
-      shopId: shop.id
+      shopId: (shop as any).id
     },
     include: {
       shop: true,
@@ -250,7 +250,7 @@ export async function updateSellerOrderShippingStatus(orderId: string, shippingS
   const result = await prisma.order.updateMany({
     where: {
       id: orderId,
-      shopId: shop.id
+      shopId: (shop as any).id
     },
     data: {
       shippingStatus
@@ -294,7 +294,7 @@ export async function updateSellerOrderTracking(orderId: string, input: SellerOr
   const result = await prisma.order.updateMany({
     where: {
       id: orderId,
-      shopId: shop.id
+      shopId: (shop as any).id
     },
     data: {
       trackingCarrier,
@@ -324,7 +324,7 @@ export async function approveSellerRefundRequest(orderId: string, noteValue: unk
   const order = await prisma.order.findFirst({
     where: {
       id: orderId,
-      shopId: shop.id
+      shopId: (shop as any).id
     },
     select: {
       id: true,
@@ -414,7 +414,7 @@ export async function rejectSellerRefundRequest(orderId: string, noteValue: unkn
   const result = await prisma.order.updateMany({
     where: {
       id: orderId,
-      shopId: shop.id,
+      shopId: (shop as any).id,
       refundRequestStatus: RefundRequestStatus.REQUESTED
     },
     data: {

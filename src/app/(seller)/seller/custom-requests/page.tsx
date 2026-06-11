@@ -5,6 +5,7 @@ export const dynamic = "force-dynamic";
 
 export default async function SellerCustomRequestsPage() {
   const { shop, requests, counts } = await getSellerCustomRequests();
+  const customRequestItems = (requests ?? []) as any[];
 
   return (
     <div>
@@ -28,14 +29,14 @@ export default async function SellerCustomRequestsPage() {
         <section className="mt-8 rounded-3xl border border-sand bg-white p-6 shadow-sm">
           <p className="text-charcoal/70">Create a shop first before receiving custom requests.</p>
         </section>
-      ) : requests.length === 0 ? (
+      ) : customRequestItems.length === 0 ? (
         <section className="mt-8 rounded-3xl border border-sand bg-white p-8 text-center shadow-sm">
           <h2 className="text-2xl font-bold">No custom requests yet</h2>
           <p className="mt-2 text-charcoal/60">Customers can submit custom requests from product pages. New requests will appear here.</p>
         </section>
       ) : (
         <section className="mt-8 grid gap-4">
-          {requests.map((request) => (
+          {customRequestItems.map((request) => (
             <Link key={request.id} href={`/seller/custom-requests/${request.id}`} className="grid gap-4 rounded-3xl border border-sand bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-soft lg:grid-cols-[96px_1fr_auto] lg:items-center">
               <div className="h-24 w-24 overflow-hidden rounded-2xl bg-cream">
                 {request.product?.images[0]?.imageUrl ? (

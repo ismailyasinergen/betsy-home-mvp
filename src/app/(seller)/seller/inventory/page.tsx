@@ -59,7 +59,7 @@ export default async function SellerInventoryPage() {
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-clay">Inventory</p>
           <h1 className="mt-2 text-4xl font-bold">Stock management</h1>
           <p className="mt-2 max-w-3xl text-charcoal/70">
-            {shop ? `Manage stock, sold-out products, missing shipping profiles, and review items for ${shop.shopName}.` : "No seller shop found."}
+            {shop ? `Manage stock, sold-out products, missing shipping profiles, and review items for ${(shop as any).shopName}.` : "No seller shop found."}
           </p>
         </div>
         <div className="flex flex-wrap gap-3">

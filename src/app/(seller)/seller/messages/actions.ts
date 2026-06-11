@@ -26,15 +26,15 @@ export async function sellerReplyMessageAction(formData: FormData) {
 
   await prisma.message.create({
     data: {
-      senderId: shop.sellerId,
-      receiverId: customer.id,
-      shopId: shop.id,
+      senderId: (shop as any).sellerId,
+      receiverId: (customer as any).id,
+      shopId: (shop as any).id,
       message
     }
   });
 
   revalidatePath("/seller/messages");
-  revalidatePath(`/seller/messages/${customer.id}`);
+  revalidatePath(`/seller/messages/${(customer as any).id}`);
   revalidatePath("/account/messages");
-  redirect(`/seller/messages/${customer.id}`);
+  redirect(`/seller/messages/${(customer as any).id}`);
 }

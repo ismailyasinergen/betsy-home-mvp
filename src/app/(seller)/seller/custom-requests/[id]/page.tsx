@@ -15,7 +15,9 @@ const statusButtons = [
 
 export default async function SellerCustomRequestDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { shop, request } = await getSellerCustomRequestById(id);
+  const customRequestData = (await getSellerCustomRequestById(id)) as any;
+  const shop = customRequestData.shop;
+  const request = customRequestData.request;
 
   if (!shop || !request) {
     notFound();

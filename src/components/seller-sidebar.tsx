@@ -21,7 +21,7 @@ export async function SellerSidebar() {
       <p className="mt-1 text-sm text-charcoal/60">Seller Studio</p>
       <nav className="mt-8 grid gap-2">
         {sellerRoutes.map((route) => {
-          const badge = badges[route.href];
+          const badge = (badges as Record<string, number>)[route.href] ?? 0;
 
           return (
             <Link key={route.href} href={route.href} className="flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-semibold hover:bg-cream hover:text-clay">

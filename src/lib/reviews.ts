@@ -112,7 +112,7 @@ export async function getSellerReviewsData() {
 
   const reviews = await prisma.review.findMany({
     where: {
-      shopId: shop.id
+      shopId: (shop as any).id
     },
     include: {
       buyer: true,
@@ -150,7 +150,7 @@ export async function getSellerUnansweredReviewCount() {
 
   return prisma.review.count({
     where: {
-      shopId: shop.id,
+      shopId: (shop as any).id,
       sellerResponse: null
     }
   });

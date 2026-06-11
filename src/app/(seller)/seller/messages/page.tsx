@@ -14,6 +14,7 @@ function formatDate(date: Date) {
 
 export default async function SellerMessagesPage() {
   const { shop, conversations } = await getSellerMessageConversations();
+  const conversationItems = (conversations ?? []) as any[];
 
   return (
     <div>
@@ -30,14 +31,14 @@ export default async function SellerMessagesPage() {
         <section className="mt-8 rounded-3xl border border-sand bg-white p-6 shadow-sm">
           <p className="text-charcoal/70">Create a shop first before using seller messages.</p>
         </section>
-      ) : conversations.length === 0 ? (
+      ) : conversationItems.length === 0 ? (
         <section className="mt-8 rounded-3xl border border-sand bg-white p-8 text-center shadow-sm">
           <h2 className="text-2xl font-bold">No buyer messages yet</h2>
           <p className="mt-2 text-charcoal/60">When customers contact you from product pages or order pages, their messages will appear here.</p>
         </section>
       ) : (
         <section className="mt-8 grid gap-4">
-          {conversations.map((conversation) => (
+          {conversationItems.map((conversation) => (
             <Link key={conversation.customerId} href={`/seller/messages/${conversation.customerId}`} className="rounded-3xl border border-sand bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-soft">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>

@@ -99,7 +99,7 @@ async function findSellerShop() {
 
 export default async function SellerAnalyticsPage() {
   const db = prisma as any;
-  const shop = await findSellerShop();
+  const shop = (await findSellerShop()) as any;
 
   if (!shop?.id) {
     return (
@@ -207,8 +207,8 @@ export default async function SellerAnalyticsPage() {
 
   const productMap = new Map<string, { title: string; units: number; revenue: number }>();
 
-  for (const order of paidOrders) {
-    for (const item of order.items ?? []) {
+  for (const order of paidOrders as any[]) {
+    for (const item of (order.items ?? []) as any[]) {
       const title =
         item.product?.title ??
         item.product?.name ??

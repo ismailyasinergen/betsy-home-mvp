@@ -48,7 +48,7 @@ export async function getSellerInventoryData() {
   const [products, shippingProfiles] = await Promise.all([
     prisma.product.findMany({
       where: {
-        shopId: shop.id,
+        shopId: (shop as any).id,
         status: {
           in: [
             ProductStatus.ACTIVE,
@@ -64,7 +64,7 @@ export async function getSellerInventoryData() {
     }),
     prisma.shippingProfile.findMany({
       where: {
-        shopId: shop.id
+        shopId: (shop as any).id
       },
       orderBy: {
         profileName: "asc"
@@ -80,7 +80,7 @@ export async function getSellerInventoryData() {
   );
   const missingShippingProducts = products.filter(
     (product) =>
-      [ProductStatus.ACTIVE, ProductStatus.DRAFT, ProductStatus.NEEDS_REVIEW].includes(product.status) &&
+      ([ProductStatus.ACTIVE, ProductStatus.DRAFT, ProductStatus.NEEDS_REVIEW] as ProductStatus[]).includes(product.status) &&
       !product.shippingProfileId
   );
   const needsReviewProducts = products.filter((product) => product.status === ProductStatus.NEEDS_REVIEW);

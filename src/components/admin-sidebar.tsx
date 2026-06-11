@@ -3,13 +3,13 @@ import { adminRoutes } from "@/lib/routes";
 import { getAdminNotificationCounts } from "@/lib/admin-data";
 
 function getBadgeCount(label: string, counts: Awaited<ReturnType<typeof getAdminNotificationCounts>>) {
-  if (label === "Activity") return counts.activity;
-  if (label === "Sellers") return counts.sellers;
-  if (label === "Products") return counts.products;
-  if (label === "Orders") return counts.orders;
-  if (label === "Refunds") return counts.refunds;
-  if (label === "Payments") return counts.payments;
-  if (label === "Reports") return counts.reports;
+  if (label === "Activity") return (counts as any).activity ?? 0;
+  if (label === "Sellers") return (counts as any).sellers ?? 0;
+  if (label === "Products") return (counts as any).products ?? 0;
+  if (label === "Orders") return (counts as any).orders ?? 0;
+  if (label === "Refunds") return (counts as any).refunds ?? 0;
+  if (label === "Payments") return (counts as any).payments ?? 0;
+  if (label === "Reports") return (counts as any).reports ?? 0;
   return 0;
 }
 

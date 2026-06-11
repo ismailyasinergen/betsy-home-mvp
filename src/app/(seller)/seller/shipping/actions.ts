@@ -68,7 +68,7 @@ export async function createShippingProfile(formData: FormData) {
 
   await prisma.shippingProfile.create({
     data: {
-      shopId: shop.id,
+      shopId: (shop as any).id,
       profileName,
       shipsFromCountry,
       processingTimeMin,
@@ -102,7 +102,7 @@ export async function deleteShippingProfile(formData: FormData) {
   await prisma.$transaction([
     prisma.product.updateMany({
       where: {
-        shopId: shop.id,
+        shopId: (shop as any).id,
         shippingProfileId: profileId
       },
       data: {
@@ -112,7 +112,7 @@ export async function deleteShippingProfile(formData: FormData) {
     prisma.shippingProfile.delete({
       where: {
         id: profileId,
-        shopId: shop.id
+        shopId: (shop as any).id
       }
     })
   ]);

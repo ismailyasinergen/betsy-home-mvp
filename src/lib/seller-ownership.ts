@@ -74,7 +74,7 @@ export async function getSellerShopForCurrentUser() {
 export async function requireSellerShopForCurrentUser() {
   const shop = await getSellerShopForCurrentUser();
 
-  if (!shop?.id) {
+  if (!(shop as any)?.id) {
     throw new Error("No seller shop is linked to the current user.");
   }
 
@@ -83,31 +83,31 @@ export async function requireSellerShopForCurrentUser() {
 
 export async function sellerOwnsShop(shopId: string) {
   const shop = await getSellerShopForCurrentUser();
-  return Boolean(shop?.id && shop.id === shopId);
+  return Boolean((shop as any)?.id && (shop as any).id === shopId);
 }
 
 export async function sellerOwnsOrder(orderId: string) {
   const db = prisma as any;
   const shop = await getSellerShopForCurrentUser();
-  if (!shop?.id) return false;
+  if (!(shop as any)?.id) return false;
 
   const order = await safe(
-    db.order.findFirst({ where: { id: orderId, shopId: shop.id }, select: { id: true } }),
+    db.order.findFirst({ where: { id: orderId, shopId: (shop as any).id }, select: { id: true } }),
     null
   );
 
-  return Boolean(order?.id);
+  return Boolean((order as any)?.id);
 }
 
 export async function sellerOwnsProduct(productId: string) {
   const db = prisma as any;
   const shop = await getSellerShopForCurrentUser();
-  if (!shop?.id) return false;
+  if (!(shop as any)?.id) return false;
 
   const product = await safe(
-    db.product.findFirst({ where: { id: productId, shopId: shop.id }, select: { id: true } }),
+    db.product.findFirst({ where: { id: productId, shopId: (shop as any).id }, select: { id: true } }),
     null
   );
 
-  return Boolean(product?.id);
+  return Boolean((product as any)?.id);
 }

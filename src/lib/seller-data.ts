@@ -26,7 +26,7 @@ export async function getSellerListingFormData() {
     prisma.style.findMany({ orderBy: { name: "asc" } }),
     prisma.shippingProfile.findMany({
       where: {
-        shopId: shop.id
+        shopId: (shop as any).id
       },
       orderBy: {
         createdAt: "asc"
@@ -55,7 +55,7 @@ export async function getSellerListings() {
 
   const products = await prisma.product.findMany({
     where: {
-      shopId: shop.id,
+      shopId: (shop as any).id,
       status: {
         in: [
           ProductStatus.ACTIVE,
@@ -107,7 +107,7 @@ export async function getSellerShippingProfiles() {
 
   const shippingProfiles = await prisma.shippingProfile.findMany({
     where: {
-      shopId: shop.id
+      shopId: (shop as any).id
     },
     include: {
       excludedCountries: {
@@ -150,7 +150,7 @@ export async function getSellerListingForEdit(productId: string) {
     prisma.product.findFirst({
       where: {
         id: productId,
-        shopId: shop.id
+        shopId: (shop as any).id
       },
       include: {
         category: true,
@@ -169,7 +169,7 @@ export async function getSellerListingForEdit(productId: string) {
     prisma.style.findMany({ orderBy: { name: "asc" } }),
     prisma.shippingProfile.findMany({
       where: {
-        shopId: shop.id
+        shopId: (shop as any).id
       },
       orderBy: {
         createdAt: "asc"

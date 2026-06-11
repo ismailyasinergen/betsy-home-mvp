@@ -107,10 +107,10 @@ export async function getCustomerConversation(shopId: string) {
       OR: [
         {
           senderId: customer.id,
-          receiverId: shop.sellerId
+          receiverId: (shop as any).sellerId
         },
         {
-          senderId: shop.sellerId,
+          senderId: (shop as any).sellerId,
           receiverId: customer.id
         }
       ]
@@ -164,11 +164,11 @@ export async function getSellerMessageConversations() {
     };
   }
 
-  const messages = await getRawSellerMessages(shop.id, shop.sellerId);
+  const messages = await getRawSellerMessages((shop as any).id, (shop as any).sellerId);
   const grouped = new Map<string, SellerMessageWithRelations[]>();
 
   for (const message of messages) {
-    const customerId = message.senderId === shop.sellerId ? message.receiverId : message.senderId;
+    const customerId = message.senderId === (shop as any).sellerId ? message.receiverId : message.senderId;
     const existing = grouped.get(customerId);
     if (existing) {
       existing.push(message);
@@ -179,8 +179,8 @@ export async function getSellerMessageConversations() {
 
   const conversations = Array.from(grouped.entries()).map(([customerId, items]) => {
     const latest = items[0];
-    const customer = latest.senderId === shop.sellerId ? latest.receiver : latest.sender;
-    const unreadCount = items.filter((item) => item.receiverId === shop.sellerId && item.status === MessageStatus.UNREAD).length;
+    const customer = latest.senderId === (shop as any).sellerId ? latest.receiver : latest.sender;
+    const unreadCount = items.filter((item) => item.receiverId === (shop as any).sellerId && item.status === MessageStatus.UNREAD).length;
 
     return {
       customerId,
@@ -226,8 +226,8 @@ export async function getSellerConversation(customerId: string) {
 
   await prisma.message.updateMany({
     where: {
-      shopId: shop.id,
-      receiverId: shop.sellerId,
+      shopId: (shop as any).id,
+      receiverId: (shop as any).sellerId,
       senderId: customerId,
       status: MessageStatus.UNREAD
     },
@@ -238,15 +238,15 @@ export async function getSellerConversation(customerId: string) {
 
   const messages = await prisma.message.findMany({
     where: {
-      shopId: shop.id,
+      shopId: (shop as any).id,
       OR: [
         {
-          senderId: shop.sellerId,
+          senderId: (shop as any).sellerId,
           receiverId: customerId
         },
         {
           senderId: customerId,
-          receiverId: shop.sellerId
+          receiverId: (shop as any).sellerId
         }
       ]
     },
@@ -300,8 +300,8 @@ export async function getSellerUnreadMessageCount() {
 
   return prisma.message.count({
     where: {
-      shopId: shop.id,
-      receiverId: shop.sellerId,
+      shopId: (shop as any).id,
+      receiverId: (shop as any).sellerId,
       status: MessageStatus.UNREAD
     }
   });

@@ -11,6 +11,7 @@ function statusLabel(status: string) {
 
 export default async function SellerListingsPage() {
   const { shop, products } = await getSellerListings();
+  const listingItems = (products ?? []) as any[];
 
   return (
     <div>
@@ -18,7 +19,7 @@ export default async function SellerListingsPage() {
         <div>
           <p className="text-sm font-bold uppercase tracking-[0.2em] text-clay">Products</p>
           <h1 className="mt-2 text-4xl font-bold">Listings</h1>
-          <p className="mt-2 text-charcoal/70">{shop ? `Showing products for ${shop.shopName}` : "No seller shop found."}</p>
+          <p className="mt-2 text-charcoal/70">{shop ? `Showing products for ${(shop as any).shopName}` : "No seller shop found."}</p>
         </div>
         <Link href="/seller/listings/new" className="rounded-full bg-clay px-5 py-3 font-bold text-white">Add listing</Link>
       </div>
@@ -38,7 +39,7 @@ export default async function SellerListingsPage() {
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
+              {listingItems.map((product) => (
                 <tr key={product.id} className="border-t border-sand align-top">
                   <td className="p-4">
                     <div className="flex items-center gap-3">
@@ -84,7 +85,7 @@ export default async function SellerListingsPage() {
                   </td>
                 </tr>
               ))}
-              {products.length === 0 ? (
+              {listingItems.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="p-8 text-center text-charcoal/60">No products yet. Add your first listing.</td>
                 </tr>

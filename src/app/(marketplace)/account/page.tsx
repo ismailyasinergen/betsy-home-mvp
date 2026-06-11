@@ -56,6 +56,12 @@ export default async function AccountPage() {
       meta: `${customOrderCount} request${customOrderCount === 1 ? "" : "s"}`
     },
     {
+      title: "Business Projects",
+      href: "/account/projects",
+      description: "Manage bulk buying requests for hotels, cafes, shops, and interior projects.",
+      meta: "B2B"
+    },
+    {
       title: "Messages",
       href: "/account/messages",
       description: "Ask sellers about products, shipping, custom sizes, and order questions.",
@@ -88,6 +94,7 @@ export default async function AccountPage() {
           <div className="flex flex-wrap gap-3">
             <Link href="/account/mood-boards" className="rounded-full border border-clay px-5 py-3 font-bold text-clay">Mood boards</Link>
             <Link href="/account/custom-orders" className="rounded-full border border-clay px-5 py-3 font-bold text-clay">Custom requests</Link>
+            <Link href="/account/projects" className="rounded-full border border-clay px-5 py-3 font-bold text-clay">Business projects</Link>
             <Link href="/account/reviews" className="rounded-full border border-clay px-5 py-3 font-bold text-clay">Reviews</Link>
             <Link href="/account/messages" className="rounded-full border border-clay px-5 py-3 font-bold text-clay">Messages</Link>
             <Link href="/account/favorites" className="rounded-full border border-clay px-5 py-3 font-bold text-clay">View favorites</Link>

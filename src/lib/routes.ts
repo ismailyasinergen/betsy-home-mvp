@@ -14,6 +14,7 @@ export const sellerRoutes = [
   { label: "Orders", href: "/seller/orders" },
   { label: "Messages", href: "/seller/messages" },
   { label: "Custom Requests", href: "/seller/custom-requests" },
+  { label: "Project Requests", href: "/seller/project-requests" },
   { label: "Reviews", href: "/seller/reviews" },
   { label: "Shipping", href: "/seller/shipping" },
   { label: "Product Catalogue", href: "/seller/product-catalogue" },

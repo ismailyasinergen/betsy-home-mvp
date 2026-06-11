@@ -28,6 +28,9 @@ export async function SiteHeader() {
               {route.label}
             </Link>
           ))}
+          <Link href="/business" className="hover:text-clay">
+            Business
+          </Link>
         </nav>
         <div className="ml-auto flex items-center gap-3 text-sm font-semibold">
           {currentUser ? (

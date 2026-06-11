@@ -3,7 +3,7 @@ import Link from "next/link";
 export function SiteFooter() {
   return (
     <footer className="mt-20 border-t border-sand bg-white/60">
-      <div className="container-page grid gap-8 py-10 md:grid-cols-4">
+      <div className="container-page grid gap-8 py-10 md:grid-cols-5">
         <div>
           <p className="text-xl font-bold text-clay">Betsy Home</p>
           <p className="mt-3 text-sm text-charcoal/70">Handmade pieces for a meaningful home.</p>
@@ -22,6 +22,14 @@ export function SiteFooter() {
             <Link href="/sell">Open a Shop</Link>
             <Link href="/seller/dashboard">Seller Studio</Link>
             <Link href="/seller/product-catalogue">Product Catalogue</Link>
+          </div>
+        </div>
+        <div>
+          <p className="font-semibold">Business</p>
+          <div className="mt-3 grid gap-2 text-sm text-charcoal/70">
+            <Link href="/business">Business Buyers</Link>
+            <Link href="/business/request">Project Request</Link>
+            <Link href="/account/projects">My Projects</Link>
           </div>
         </div>
         <div>

@@ -29,6 +29,7 @@ export const adminRoutes = [
   { label: "Sellers", href: "/admin/sellers" },
   { label: "Products", href: "/admin/products" },
   { label: "Orders", href: "/admin/orders" },
+  { label: "Business Requests", href: "/admin/project-requests" },
   { label: "Refunds", href: "/admin/refunds" },
   { label: "Categories", href: "/admin/categories" },
   { label: "Collections", href: "/admin/collections" },

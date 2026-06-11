@@ -111,6 +111,7 @@ model User {
   receivedMessages        Message[]                @relation("ReceivedMessages")
   customRequests          CustomOrderRequest[]
   businessProjectRequests BusinessProjectRequest[] @relation("BusinessProjectRequests")
+  businessProjectQuotes   BusinessProjectQuote[]   @relation("BusinessProjectQuotes")
   carts                   Cart[]
   emailVerifiedAt         DateTime?
   emailVerificationTokens EmailVerificationToken[]
@@ -534,9 +535,9 @@ enum BusinessProjectStatus {
 }
 
 model BusinessProjectRequest {
-  id              String                @id @default(cuid())
+  id              String                 @id @default(cuid())
   buyerId         String
-  buyer           User                  @relation("BusinessProjectRequests", fields: [buyerId], references: [id], onDelete: Cascade)
+  buyer           User                   @relation("BusinessProjectRequests", fields: [buyerId], references: [id], onDelete: Cascade)
   projectName     String
   companyName     String?
   businessType    String?
@@ -546,11 +547,40 @@ model BusinessProjectRequest {
   categories      String[]
   quantitySummary String
   message         String
-  status          BusinessProjectStatus @default(SUBMITTED)
-  createdAt       DateTime              @default(now())
-  updatedAt       DateTime              @updatedAt
+  status          BusinessProjectStatus  @default(SUBMITTED)
+  quotes          BusinessProjectQuote[]
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
 
   @@index([buyerId])
   @@index([status])
   @@index([createdAt])
+}
+
+enum BusinessProjectQuoteStatus {
+  SENT
+  ACCEPTED
+  DECLINED
+  WITHDRAWN
+}
+
+model BusinessProjectQuote {
+  id               String                     @id @default(cuid())
+  projectRequestId String
+  projectRequest   BusinessProjectRequest     @relation(fields: [projectRequestId], references: [id], onDelete: Cascade)
+  sellerId         String
+  seller           User                       @relation("BusinessProjectQuotes", fields: [sellerId], references: [id], onDelete: Cascade)
+  shopId           String?
+  shopName         String?
+  totalPrice       Decimal                    @db.Decimal(10, 2)
+  shippingPrice    Decimal?                   @db.Decimal(10, 2)
+  productionDays   Int?
+  message          String
+  status           BusinessProjectQuoteStatus @default(SENT)
+  createdAt        DateTime                   @default(now())
+  updatedAt        DateTime                   @updatedAt
+
+  @@index([projectRequestId])
+  @@index([sellerId])
+  @@index([status])
 }

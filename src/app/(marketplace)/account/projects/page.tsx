@@ -6,11 +6,30 @@ function formatDate(date: Date | null) {
   return date ? date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "Flexible";
 }
 
+function money(value: unknown) {
+  return `$${Number(value).toFixed(2)}`;
+}
+
 export default async function AccountProjectsPage() {
   const user = await requireSignedIn("/account/projects");
 
   const projects = await prisma.businessProjectRequest.findMany({
     where: { buyerId: user.id },
+    include: {
+      quotes: {
+        include: {
+          seller: {
+            select: {
+              name: true,
+              email: true
+            }
+          }
+        },
+        orderBy: {
+          createdAt: "desc"
+        }
+      }
+    },
     orderBy: { createdAt: "desc" }
   });
 
@@ -46,6 +65,38 @@ export default async function AccountProjectsPage() {
                   <div className="rounded-2xl bg-cream px-4 py-3 text-sm text-charcoal/70">
                     Needed by: <strong className="text-charcoal">{formatDate(project.neededBy)}</strong>
                   </div>
+                </div>
+
+                <div className="mt-6 rounded-3xl bg-cream p-5">
+                  <h3 className="font-extrabold text-charcoal">Seller offers</h3>
+
+                  {project.quotes.length === 0 ? (
+                    <p className="mt-2 text-sm text-charcoal/70">
+                      No seller quotes yet. Sellers will see your request in Seller Studio.
+                    </p>
+                  ) : (
+                    <div className="mt-4 space-y-3">
+                      {project.quotes.map((quote) => (
+                        <div key={quote.id} className="rounded-2xl bg-white p-4 text-sm shadow-sm">
+                          <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                            <div>
+                              <p className="font-bold text-charcoal">
+                                {quote.shopName || quote.seller.name || quote.seller.email}
+                              </p>
+                              <p className="mt-1 text-charcoal/70">
+                                Production: {quote.productionDays ? `${quote.productionDays} days` : "Not specified"} · Shipping: {quote.shippingPrice ? money(quote.shippingPrice) : "Not specified"}
+                              </p>
+                            </div>
+                            <p className="text-xl font-black text-charcoal">{money(quote.totalPrice)}</p>
+                          </div>
+                          <p className="mt-3 leading-6 text-charcoal/70">{quote.message}</p>
+                          <a href={`mailto:${quote.seller.email}?subject=${encodeURIComponent(`Betsy Home project quote: ${project.projectName}`)}`} className="mt-4 inline-flex rounded-full border border-clay px-4 py-2 text-xs font-bold text-clay">
+                            Message seller
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </article>
             ))

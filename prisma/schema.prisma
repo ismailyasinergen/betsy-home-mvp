@@ -93,30 +93,30 @@ enum CatalogueStatus {
 }
 
 model User {
-  id               String               @id @default(cuid())
-  name             String?
-  email            String               @unique
-  passwordHash     String?
-  role             UserRole             @default(CUSTOMER)
-  phone            String?
-  avatarUrl        String?
-  stripeCustomerId String?
-  shops            Shop[]               @relation("SellerShops")
-  orders           Order[]              @relation("BuyerOrders")
-  favorites        Favorite[]
-  moodBoards       MoodBoard[]
-  reviews          Review[]             @relation("BuyerReviews")
-  addresses        Address[]
-  sentMessages     Message[]            @relation("SentMessages")
-  receivedMessages Message[]            @relation("ReceivedMessages")
-  customRequests   CustomOrderRequest[]
-  carts            Cart[]
-  emailVerifiedAt  DateTime?
+  id                      String                   @id @default(cuid())
+  name                    String?
+  email                   String                   @unique
+  passwordHash            String?
+  role                    UserRole                 @default(CUSTOMER)
+  phone                   String?
+  avatarUrl               String?
+  stripeCustomerId        String?
+  shops                   Shop[]                   @relation("SellerShops")
+  orders                  Order[]                  @relation("BuyerOrders")
+  favorites               Favorite[]
+  moodBoards              MoodBoard[]
+  reviews                 Review[]                 @relation("BuyerReviews")
+  addresses               Address[]
+  sentMessages            Message[]                @relation("SentMessages")
+  receivedMessages        Message[]                @relation("ReceivedMessages")
+  customRequests          CustomOrderRequest[]
+  businessProjectRequests BusinessProjectRequest[] @relation("BusinessProjectRequests")
+  carts                   Cart[]
+  emailVerifiedAt         DateTime?
   emailVerificationTokens EmailVerificationToken[]
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
 }
-
 
 model EmailVerificationToken {
   id        String    @id @default(cuid())
@@ -148,31 +148,31 @@ model Address {
 }
 
 model Shop {
-  id              String               @id @default(cuid())
-  sellerId        String
-  seller          User                 @relation("SellerShops", fields: [sellerId], references: [id], onDelete: Cascade)
-  shopName        String
-  shopSlug        String               @unique
-  description     String?
-  announcement    String?
-  logoUrl         String?
-  bannerUrl       String?
-  location        String?
-  countryCode     String?
-  rating          Float                @default(0)
-  totalSales      Int                  @default(0)
-  stripeAccountId String?
-  status          ShopStatus           @default(DRAFT)
-  products        Product[]
+  id               String               @id @default(cuid())
+  sellerId         String
+  seller           User                 @relation("SellerShops", fields: [sellerId], references: [id], onDelete: Cascade)
+  shopName         String
+  shopSlug         String               @unique
+  description      String?
+  announcement     String?
+  logoUrl          String?
+  bannerUrl        String?
+  location         String?
+  countryCode      String?
+  rating           Float                @default(0)
+  totalSales       Int                  @default(0)
+  stripeAccountId  String?
+  status           ShopStatus           @default(DRAFT)
+  products         Product[]
   shippingProfiles ShippingProfile[]
-  orders          Order[]
-  reviews         Review[]
-  messages        Message[]
-  catalogues      PdfCatalogue[]
-  customRequests  CustomOrderRequest[]
-  payouts         Payout[]
-  createdAt       DateTime             @default(now())
-  updatedAt       DateTime             @updatedAt
+  orders           Order[]
+  reviews          Review[]
+  messages         Message[]
+  catalogues       PdfCatalogue[]
+  customRequests   CustomOrderRequest[]
+  payouts          Payout[]
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
 }
 
 model Category {
@@ -209,28 +209,28 @@ model Style {
 }
 
 model Product {
-  id                  String              @id @default(cuid())
+  id                  String               @id @default(cuid())
   shopId              String
-  shop                Shop                @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  shop                Shop                 @relation(fields: [shopId], references: [id], onDelete: Cascade)
   title               String
-  slug                String              @unique
+  slug                String               @unique
   description         String
-  price               Decimal             @db.Decimal(10, 2)
-  salePrice           Decimal?            @db.Decimal(10, 2)
-  quantity            Int                 @default(0)
+  price               Decimal              @db.Decimal(10, 2)
+  salePrice           Decimal?             @db.Decimal(10, 2)
+  quantity            Int                  @default(0)
   sku                 String?
   categoryId          String
-  category            Category            @relation(fields: [categoryId], references: [id])
+  category            Category             @relation(fields: [categoryId], references: [id])
   roomId              String?
-  room                Room?               @relation(fields: [roomId], references: [id])
+  room                Room?                @relation(fields: [roomId], references: [id])
   styleId             String?
-  style               Style?              @relation(fields: [styleId], references: [id])
+  style               Style?               @relation(fields: [styleId], references: [id])
   shippingProfileId   String?
-  shippingProfile     ShippingProfile?    @relation(fields: [shippingProfileId], references: [id])
-  status              ProductStatus       @default(DRAFT)
-  productType         ProductType         @default(PHYSICAL)
-  origin              ProductOrigin       @default(HANDMADE)
-  isCustomizable      Boolean             @default(false)
+  shippingProfile     ShippingProfile?     @relation(fields: [shippingProfileId], references: [id])
+  status              ProductStatus        @default(DRAFT)
+  productType         ProductType          @default(PHYSICAL)
+  origin              ProductOrigin        @default(HANDMADE)
+  isCustomizable      Boolean              @default(false)
   personalizationHint String?
   materials           String[]
   dimensions          String?
@@ -247,8 +247,8 @@ model Product {
   reviews             Review[]
   collectionProducts  CollectionProduct[]
   customRequests      CustomOrderRequest[]
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
 
   @@index([shopId])
   @@index([categoryId])
@@ -279,21 +279,21 @@ model ProductVariation {
 }
 
 model ShippingProfile {
-  id                            String                     @id @default(cuid())
-  shopId                        String
-  shop                          Shop                       @relation(fields: [shopId], references: [id], onDelete: Cascade)
-  profileName                   String
-  shipsFromCountry              String
-  processingTimeMin             Int
-  processingTimeMax             Int
-  domesticShippingPrice         Decimal?                   @db.Decimal(10, 2)
-  internationalShippingEnabled  Boolean                    @default(false)
-  freeShippingEnabled           Boolean                    @default(false)
-  estimatedDeliveryText         String?
-  products                      Product[]
-  excludedCountries             ShippingExcludedCountry[]
-  createdAt                     DateTime                   @default(now())
-  updatedAt                     DateTime                   @updatedAt
+  id                           String                    @id @default(cuid())
+  shopId                       String
+  shop                         Shop                      @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  profileName                  String
+  shipsFromCountry             String
+  processingTimeMin            Int
+  processingTimeMax            Int
+  domesticShippingPrice        Decimal?                  @db.Decimal(10, 2)
+  internationalShippingEnabled Boolean                   @default(false)
+  freeShippingEnabled          Boolean                   @default(false)
+  estimatedDeliveryText        String?
+  products                     Product[]
+  excludedCountries            ShippingExcludedCountry[]
+  createdAt                    DateTime                  @default(now())
+  updatedAt                    DateTime                  @updatedAt
 }
 
 model ShippingExcludedCountry {
@@ -331,39 +331,39 @@ model CartItem {
 }
 
 model Order {
-  id                    String         @id @default(cuid())
-  buyerId               String?
-  buyer                 User?          @relation("BuyerOrders", fields: [buyerId], references: [id], onDelete: SetNull)
-  shopId                String
-  shop                  Shop           @relation(fields: [shopId], references: [id])
-  orderNumber           String         @unique
-  subtotal              Decimal        @db.Decimal(10, 2)
-  shippingTotal         Decimal        @default(0) @db.Decimal(10, 2)
-  taxTotal              Decimal        @default(0) @db.Decimal(10, 2)
-  platformFee           Decimal        @default(0) @db.Decimal(10, 2)
-  total                 Decimal        @db.Decimal(10, 2)
-  paymentStatus         PaymentStatus  @default(PENDING)
-  shippingStatus        ShippingStatus @default(NEW)
-  shippingAddress       Json?
+  id                      String              @id @default(cuid())
+  buyerId                 String?
+  buyer                   User?               @relation("BuyerOrders", fields: [buyerId], references: [id], onDelete: SetNull)
+  shopId                  String
+  shop                    Shop                @relation(fields: [shopId], references: [id])
+  orderNumber             String              @unique
+  subtotal                Decimal             @db.Decimal(10, 2)
+  shippingTotal           Decimal             @default(0) @db.Decimal(10, 2)
+  taxTotal                Decimal             @default(0) @db.Decimal(10, 2)
+  platformFee             Decimal             @default(0) @db.Decimal(10, 2)
+  total                   Decimal             @db.Decimal(10, 2)
+  paymentStatus           PaymentStatus       @default(PENDING)
+  shippingStatus          ShippingStatus      @default(NEW)
+  shippingAddress         Json?
   stripePaymentIntentId   String?
   stripeCheckoutSessionId String?
-  trackingCarrier        String?
-  trackingNumber         String?
-  trackingUrl            String?
-  shippingNote           String?
-  buyerConfirmedAt       DateTime?
-  buyerDeliveryNote      String?
-  refundRequestStatus    RefundRequestStatus @default(NONE)
-  refundRequestedAt      DateTime?
-  refundReason           String?
-  refundResolutionNote   String?
-  refundResolvedAt       DateTime?
-  refundStripeRefundId   String?
+  trackingCarrier         String?
+  trackingNumber          String?
+  trackingUrl             String?
+  shippingNote            String?
+  buyerConfirmedAt        DateTime?
+  buyerDeliveryNote       String?
+  refundRequestStatus     RefundRequestStatus @default(NONE)
+  refundRequestedAt       DateTime?
+  refundReason            String?
+  refundResolutionNote    String?
+  refundResolvedAt        DateTime?
+  refundStripeRefundId    String?
   items                   OrderItem[]
-  reviews               Review[]
-  messages              Message[]
-  createdAt             DateTime       @default(now())
-  updatedAt             DateTime       @updatedAt
+  reviews                 Review[]
+  messages                Message[]
+  createdAt               DateTime            @default(now())
+  updatedAt               DateTime            @updatedAt
 }
 
 model OrderItem {
@@ -434,19 +434,19 @@ model MoodBoardItem {
 }
 
 model Message {
-  id         String        @id @default(cuid())
-  senderId   String
-  sender     User          @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
-  receiverId String
-  receiver   User          @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
-  shopId     String?
-  shop       Shop?         @relation(fields: [shopId], references: [id], onDelete: SetNull)
-  orderId    String?
-  order      Order?        @relation(fields: [orderId], references: [id], onDelete: SetNull)
-  message    String
+  id            String        @id @default(cuid())
+  senderId      String
+  sender        User          @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiverId    String
+  receiver      User          @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  shopId        String?
+  shop          Shop?         @relation(fields: [shopId], references: [id], onDelete: SetNull)
+  orderId       String?
+  order         Order?        @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  message       String
   attachmentUrl String?
-  status     MessageStatus @default(UNREAD)
-  createdAt  DateTime      @default(now())
+  status        MessageStatus @default(UNREAD)
+  createdAt     DateTime      @default(now())
 }
 
 model CustomOrderRequest {
@@ -521,4 +521,36 @@ model CollectionProduct {
   createdAt    DateTime   @default(now())
 
   @@unique([collectionId, productId])
+}
+
+enum BusinessProjectStatus {
+  SUBMITTED
+  REVIEWING
+  QUOTED
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model BusinessProjectRequest {
+  id              String                @id @default(cuid())
+  buyerId         String
+  buyer           User                  @relation("BusinessProjectRequests", fields: [buyerId], references: [id], onDelete: Cascade)
+  projectName     String
+  companyName     String?
+  businessType    String?
+  projectLocation String?
+  neededBy        DateTime?
+  budgetRange     String?
+  categories      String[]
+  quantitySummary String
+  message         String
+  status          BusinessProjectStatus @default(SUBMITTED)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  @@index([buyerId])
+  @@index([status])
+  @@index([createdAt])
 }

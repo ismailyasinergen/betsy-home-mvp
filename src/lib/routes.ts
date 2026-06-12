@@ -4,6 +4,7 @@ export const marketplaceRoutes = [
   { label: "Styles", href: "/style/boho" },
   { label: "Boards", href: "/boards" },
   { label: "Gifts", href: "/search?q=gifts" },
+  { label: "Business", href: "/business" },
   { label: "Sell", href: "/sell" }
 ];
 

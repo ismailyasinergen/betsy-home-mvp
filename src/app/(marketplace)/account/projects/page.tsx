@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireSignedIn } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { SiteHeader } from "@/components/site-header";
 
 function formatDate(date: Date | null) {
   return date ? date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "Flexible";
@@ -34,7 +35,9 @@ export default async function AccountProjectsPage() {
   });
 
   return (
-    <main className="bg-cream">
+    <>
+      <SiteHeader />
+      <main className="bg-cream">
       <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -103,6 +106,7 @@ export default async function AccountProjectsPage() {
           )}
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }

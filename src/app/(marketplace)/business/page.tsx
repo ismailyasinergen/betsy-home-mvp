@@ -1,8 +1,11 @@
 import Link from "next/link";
+import { SiteHeader } from "@/components/site-header";
 
 export default function BusinessPage() {
   return (
-    <main className="bg-cream">
+    <>
+      <SiteHeader />
+      <main className="bg-cream">
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="rounded-[2rem] bg-stone-900 px-8 py-12 text-white md:px-14 md:py-16">
           <p className="text-xs font-bold uppercase tracking-[0.35em] text-amber-100">
@@ -44,6 +47,7 @@ export default function BusinessPage() {
           ))}
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }

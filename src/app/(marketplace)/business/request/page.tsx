@@ -1,8 +1,11 @@
 import { createBusinessProjectRequest } from "./actions";
+import { SiteHeader } from "@/components/site-header";
 
 export default function BusinessRequestPage() {
   return (
-    <main className="bg-cream">
+    <>
+      <SiteHeader />
+      <main className="bg-cream">
       <section className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="rounded-[2rem] border border-sand bg-white p-8 shadow-sm">
           <p className="text-xs font-bold uppercase tracking-[0.35em] text-clay">
@@ -70,6 +73,7 @@ export default function BusinessRequestPage() {
           </form>
         </div>
       </section>
-    </main>
+      </main>
+    </>
   );
 }

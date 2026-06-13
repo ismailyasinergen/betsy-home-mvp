@@ -68,7 +68,14 @@ export default function BusinessRequestPage() {
               <textarea name="message" required rows={6} className="mt-2 w-full rounded-2xl border border-sand px-4 py-3" placeholder="Describe style, colors, materials, customization, delivery needs, and anything sellers should know." />
             </label>
 
-            <button type="submit" className="w-full rounded-full bg-clay px-6 py-4 text-sm font-extrabold text-white shadow-sm transition hover:bg-clay/90">
+            
+              <BusinessRequestMediaInput />
+
+              <p className="text-xs leading-5 text-charcoal/50">
+                By uploading files, you confirm you have the right to share them for this project request.
+              </p>
+
+<button type="submit" className="w-full rounded-full bg-clay px-6 py-4 text-sm font-extrabold text-white shadow-sm transition hover:bg-clay/90">
               Submit project request
             </button>
           </form>

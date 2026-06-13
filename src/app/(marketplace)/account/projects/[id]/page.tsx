@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
@@ -17,7 +19,7 @@ function formatDate(date: Date | null) {
 }
 
 function money(value: unknown) {
-  return `$${Number(value).toFixed(2)}`;
+  return Number(value).toFixed(2);
 }
 
 export default async function BusinessProjectRequestDetailPage({
@@ -135,10 +137,10 @@ export default async function BusinessProjectRequestDetailPage({
                             {quote.shopName || quote.seller.name || quote.seller.email}
                           </p>
                           <p className="mt-1 text-charcoal/70">
-                            Production: {quote.productionDays ? `${quote.productionDays} days` : "Not specified"} · Shipping: {quote.shippingPrice ? money(quote.shippingPrice) : "Not specified"}
+                            Production: {quote.productionDays ? `${quote.productionDays} days` : "Not specified"} · Shipping: {quote.shippingPrice ? <CurrencyPrice amount={Number(quote.shippingPrice)} /> : "Not specified"}
                           </p>
                         </div>
-                        <p className="text-xl font-black text-charcoal">{money(quote.totalPrice)}</p>
+                        <p className="text-xl font-black text-charcoal"><CurrencyPrice amount={Number(quote.totalPrice ?? 0)} /></p>
                       </div>
 
                       <p className="mt-3 leading-6 text-charcoal/70">{quote.message}</p>
@@ -161,7 +163,7 @@ export default async function BusinessProjectRequestDetailPage({
   );
 }
 
-function Info({ label, value }: { label: string; value: string }) {
+function Info({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div className="rounded-2xl bg-cream p-4">
       <p className="text-xs font-bold uppercase tracking-[0.2em] text-charcoal/50">

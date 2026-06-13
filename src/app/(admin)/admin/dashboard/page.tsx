@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { StatCard } from "@/components/stat-card";
 import { getAdminDashboardData } from "@/lib/admin-data";
@@ -16,7 +18,7 @@ export default async function AdminDashboardPage() {
       <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Pending sellers" value={String(data.pendingSellers)} helper="Needs review" />
         <StatCard label="Products live" value={String(data.productsLive)} helper={`${data.productsNeedReview} need moderation`} />
-        <StatCard label="Paid GMV" value={`$${data.grossMerchandiseValue.toFixed(2)}`} helper={`Fees: $${data.platformFees.toFixed(2)}`} />
+        <StatCard label="Paid GMV" value={<CurrencyPrice amount={Number(data.grossMerchandiseValue)} />} helper={<span>Fees: <CurrencyPrice amount={Number(data.platformFees)} /></span>} />
         <StatCard label="Pending payments" value={String(data.pendingPayments)} helper={`${data.paidOrders} paid orders`} />
       </div>
 
@@ -52,7 +54,7 @@ export default async function AdminDashboardPage() {
             {data.recentOrders.map((order) => (
               <Link key={order.id} href="/admin/orders" className="rounded-2xl bg-cream p-4 text-sm">
                 <p className="font-bold">{order.orderNumber}</p>
-                <p className="text-charcoal/60">{order.shop.shopName} · ${Number(order.total).toFixed(2)}</p>
+                <p className="text-charcoal/60">{order.shop.shopName} · <CurrencyPrice amount={Number(order.total)} /></p>
                 <p className="mt-1 text-xs font-bold text-clay">{order.paymentStatus} / {order.shippingStatus}</p>
               </Link>
             ))}

@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { PaymentStatus, ShippingStatus } from "@prisma/client";
 import { SiteHeader } from "@/components/site-header";
@@ -6,7 +8,7 @@ import { getCustomerOrders } from "@/lib/customer-orders";
 export const dynamic = "force-dynamic";
 
 function money(value: number) {
-  return `$${value.toFixed(2)}`;
+  return value.toFixed(2);
 }
 
 function formatDate(date: Date) {
@@ -64,11 +66,11 @@ export default async function CustomerOrdersPage() {
           <div className="flex flex-wrap gap-3">
             <div className="rounded-3xl border border-sand bg-white p-4 text-right shadow-sm">
               <p className="text-sm text-charcoal/60">Paid order value</p>
-              <p className="text-2xl font-bold">{money(paidValue)}</p>
+              <p className="text-2xl font-bold"><CurrencyPrice amount={Number(paidValue ?? 0)} /></p>
             </div>
             <div className="rounded-3xl border border-sand bg-white p-4 text-right shadow-sm">
               <p className="text-sm text-charcoal/60">Pending order value</p>
-              <p className="text-2xl font-bold">{money(pendingValue)}</p>
+              <p className="text-2xl font-bold"><CurrencyPrice amount={Number(pendingValue ?? 0)} /></p>
             </div>
           </div>
         </div>
@@ -82,7 +84,7 @@ export default async function CustomerOrdersPage() {
                   <p className="mt-1 text-sm text-charcoal/60">Seller: {order.shop.shopName} · Ordered {formatDate(order.createdAt)}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-bold">{money(Number(order.total))}</p>
+                  <p className="text-2xl font-bold"><CurrencyPrice amount={Number(order.total)} /></p>
                   <div className="mt-2 flex flex-wrap justify-end gap-2">
                     <span className={`rounded-full px-3 py-1 text-xs font-bold ${paymentBadgeClass(order.paymentStatus)}`}>{order.paymentStatus}</span>
                     <span className={`rounded-full px-3 py-1 text-xs font-bold ${shippingBadgeClass(order.shippingStatus)}`}>{order.shippingStatus.replaceAll("_", " ")}</span>

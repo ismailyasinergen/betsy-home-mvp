@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import { ProductStatus } from "@prisma/client";
 import Link from "next/link";
 import { changeSellerListingStatus, deleteSellerListing } from "@/app/(seller)/seller/listings/actions";
@@ -61,7 +63,7 @@ export default async function SellerListingsPage() {
                   <td className="p-4">{product.category.name}</td>
                   <td className="p-4"><span className="inline-flex rounded-full bg-cream px-3 py-1 text-xs font-bold text-clay">{statusLabel(product.status)}</span></td>
                   <td className="p-4">{product.quantity}</td>
-                  <td className="p-4 font-bold">${Number(product.salePrice ?? product.price).toFixed(2)}</td>
+                  <td className="p-4 font-bold"><CurrencyPrice amount={Number(product.salePrice ?? product.price)} /></td>
                   <td className="p-4">{product.shippingProfile?.profileName ?? <span className="font-semibold text-red-600">No profile</span>}</td>
                   <td className="p-4">
                     <div className="flex flex-wrap gap-2">

@@ -1,3 +1,4 @@
+import { CurrencyPrice } from "@/components/currency-price";
 import { PaymentStatus, RefundRequestStatus, ShippingStatus } from "@prisma/client";
 import Link from "next/link";
 import { getSellerOrders } from "@/lib/orders";

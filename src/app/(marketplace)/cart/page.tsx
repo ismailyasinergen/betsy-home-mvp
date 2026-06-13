@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { getCartPageData } from "@/lib/cart";
@@ -6,7 +8,7 @@ import { removeCartItemAction, updateCartItemQuantityAction } from "@/app/(marke
 export const dynamic = "force-dynamic";
 
 function money(value: number) {
-  return `$${value.toFixed(2)}`;
+  return value.toFixed(2);
 }
 
 export default async function CartPage({ searchParams }: { searchParams: Promise<{ country?: string }> }) {
@@ -50,7 +52,7 @@ export default async function CartPage({ searchParams }: { searchParams: Promise
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
                       <Link href={`/shop/${group.shopSlug}`} className="text-lg font-bold hover:text-clay">{group.shopName}</Link>
-                      <p className="text-sm text-charcoal/60">Seller subtotal: {money(group.subtotal)}</p>
+                      <p className="text-sm text-charcoal/60">Seller subtotal: <CurrencyPrice amount={Number(group.subtotal ?? 0)} /></p>
                     </div>
                   </div>
 
@@ -75,7 +77,7 @@ export default async function CartPage({ searchParams }: { searchParams: Promise
                         </div>
 
                         <div className="grid gap-3 md:min-w-40 md:justify-items-end">
-                          <p className="text-lg font-bold">{money(item.lineTotal)}</p>
+                          <p className="text-lg font-bold"><CurrencyPrice amount={Number(item.lineTotal ?? 0)} /></p>
                           <div className="flex items-center gap-2">
                             <form action={updateCartItemQuantityAction}>
                               <input type="hidden" name="itemId" value={item.id} />
@@ -107,10 +109,10 @@ export default async function CartPage({ searchParams }: { searchParams: Promise
             <aside className="h-fit rounded-3xl border border-sand bg-white p-6 shadow-sm">
               <p className="text-xl font-bold">Order summary</p>
               <div className="mt-5 grid gap-3 text-sm">
-                <div className="flex justify-between"><span>Subtotal</span><span>{money(cart.subtotal)}</span></div>
+                <div className="flex justify-between"><span>Subtotal</span><span><CurrencyPrice amount={Number(cart.subtotal ?? 0)} /></span></div>
                 <div className="flex justify-between"><span>Shipping</span><span>{cart.shippingTotal === 0 ? "Calculated later" : money(cart.shippingTotal)}</span></div>
                 <div className="flex justify-between"><span>Tax</span><span>{cart.estimatedTax === 0 ? "Calculated later" : money(cart.estimatedTax)}</span></div>
-                <div className="flex justify-between border-t border-sand pt-3 text-lg font-bold"><span>Total</span><span>{money(cart.total)}</span></div>
+                <div className="flex justify-between border-t border-sand pt-3 text-lg font-bold"><span>Total</span><span><CurrencyPrice amount={Number(cart.total ?? 0)} /></span></div>
               </div>
 
               {cart.blockedItems.length > 0 ? (

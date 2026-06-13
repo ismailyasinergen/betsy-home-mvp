@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { UserRole } from "@prisma/client";
 import { requireRole } from "@/lib/auth";
 

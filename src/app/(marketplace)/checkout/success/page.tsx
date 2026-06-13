@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { getOrdersByNumbers } from "@/lib/orders";
@@ -6,7 +8,7 @@ import { confirmStripeCheckoutReturnAndMarkPaid } from "@/lib/stripe-connect";
 export const dynamic = "force-dynamic";
 
 function money(value: number) {
-  return `$${value.toFixed(2)}`;
+  return value.toFixed(2);
 }
 
 export default async function CheckoutSuccessPage({ searchParams }: { searchParams: Promise<{ orders?: string; stripe?: string }> }) {
@@ -52,7 +54,7 @@ export default async function CheckoutSuccessPage({ searchParams }: { searchPara
                       <p className="text-sm text-charcoal/60">Seller: {order.shop.shopName}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold">{money(Number(order.total))}</p>
+                      <p className="font-bold"><CurrencyPrice amount={Number(order.total)} /></p>
                       <p className="text-sm text-charcoal/60">Payment: <span className="font-bold text-clay">{order.paymentStatus}</span></p>
                     </div>
                   </div>

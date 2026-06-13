@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import { ProductStatus } from "@prisma/client";
 import Link from "next/link";
 import {
@@ -30,7 +32,7 @@ function getStatusClass(status: ProductStatus) {
   }
 }
 
-function InventoryStat({ label, value, helper }: { label: string; value: string | number; helper?: string }) {
+function InventoryStat({ label, value, helper }: { label: string; value: ReactNode | number; helper?: ReactNode }) {
   return (
     <div className="rounded-3xl border border-sand bg-white p-5 shadow-sm">
       <p className="text-sm text-charcoal/60">{label}</p>
@@ -135,7 +137,7 @@ export default async function SellerInventoryPage() {
                         </div>
                         <div className="min-w-0">
                           <p className="max-w-xs truncate font-bold">{product.title}</p>
-                          <p className="text-xs text-charcoal/55">{product.category.name} · ${Number(product.salePrice ?? product.price).toFixed(2)}</p>
+                          <p className="text-xs text-charcoal/55">{product.category.name} · <CurrencyPrice amount={Number(product.salePrice ?? product.price)} /></p>
                           <p className="mt-1 text-xs text-charcoal/50">{product._count.orderItems} orders · {product._count.favorites} favorites</p>
                         </div>
                       </div>

@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import { PaymentStatus, ShippingStatus } from "@prisma/client";
 import Link from "next/link";
 import { StatCard } from "@/components/stat-card";
@@ -68,7 +70,7 @@ export default async function SellerDashboardPage() {
       </div>
 
       <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Paid order value" value={`$${pendingRevenue.toFixed(2)}`} helper="After platform fees in demo mode" />
+        <StatCard label="Paid order value" value={<CurrencyPrice amount={Number(pendingRevenue)} />} helper="After platform fees in demo mode" />
         <StatCard label="Open orders" value={String(openOrders)} helper="New or processing orders" />
         <StatCard label="Active listings" value={String(inventory.metrics.activeProducts)} helper={`${inventory.metrics.totalUnits} total units`} />
         <StatCard label="Unread messages" value={String(unreadMessages)} helper="Customer replies and inquiries" />

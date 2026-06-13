@@ -49,7 +49,7 @@ export default function BusinessRequestPage() {
 
             <label className="block">
               <span className="text-sm font-bold text-charcoal">Budget range</span>
-              <input name="budgetRange" className="mt-2 w-full rounded-2xl border border-sand px-4 py-3" placeholder="€2,000–€5,000" />
+              <input name="budgetRange" className="mt-2 w-full rounded-2xl border border-sand px-4 py-3" placeholder="$2,000–$5,000 or €2,000–€5,000" />
             </label>
 
             <label className="block">

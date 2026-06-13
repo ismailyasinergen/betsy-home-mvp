@@ -35,7 +35,7 @@ export default async function SellPage({ searchParams }: { searchParams: Promise
                 "PDF product catalogues",
                 "Custom order requests",
                 "Demo Stripe Connect flow"
-              ].map((feature) => (
+  ].map((feature) => (
                 <div key={feature} className="rounded-3xl border border-sand bg-cream p-5 font-semibold">{feature}</div>
               ))}
             </div>

@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import { PaymentStatus, RefundRequestStatus } from "@prisma/client";
 import { getAdminRefundsData } from "@/lib/admin-data";
 import { approveAdminRefundRequestAction, markManualRefundResolvedAction, rejectAdminRefundRequestAction } from "./actions";
@@ -19,7 +21,7 @@ function formatDate(value: Date | null | undefined) {
   }).format(value);
 }
 
-function statusLabel(value: string | null | undefined) {
+function statusLabel(value: ReactNode | null | undefined) {
   return String(value ?? "NONE").replaceAll("_", " ");
 }
 
@@ -60,8 +62,8 @@ export default async function AdminRefundsPage() {
         </div>
         <div className="rounded-3xl border border-sand bg-white p-5 shadow-sm">
           <p className="text-sm text-charcoal/60">Refund/request value</p>
-          <p className="mt-2 text-3xl font-bold">${money(data.refundGrossValue)}</p>
-          <p className="mt-1 text-xs text-charcoal/50">Fees: ${money(data.refundPlatformFees)}</p>
+          <p className="mt-2 text-3xl font-bold"><CurrencyPrice amount={Number(data.refundGrossValue ?? 0)} /></p>
+          <p className="mt-1 text-xs text-charcoal/50">Fees: <CurrencyPrice amount={Number(data.refundPlatformFees ?? 0)} /></p>
         </div>
       </div>
 
@@ -99,8 +101,8 @@ export default async function AdminRefundsPage() {
                   </p>
 
                   <div className="mt-4 grid gap-3 md:grid-cols-4">
-                    <div className="rounded-2xl bg-cream p-3"><p className="text-sm text-charcoal/60">Total</p><p className="text-xl font-bold">${money(order.total)}</p></div>
-                    <div className="rounded-2xl bg-cream p-3"><p className="text-sm text-charcoal/60">Platform fee</p><p className="text-xl font-bold">${money(order.platformFee)}</p></div>
+                    <div className="rounded-2xl bg-cream p-3"><p className="text-sm text-charcoal/60">Total</p><p className="text-xl font-bold"><CurrencyPrice amount={Number(order.total ?? 0)} /></p></div>
+                    <div className="rounded-2xl bg-cream p-3"><p className="text-sm text-charcoal/60">Platform fee</p><p className="text-xl font-bold"><CurrencyPrice amount={Number(order.platformFee ?? 0)} /></p></div>
                     <div className="rounded-2xl bg-cream p-3"><p className="text-sm text-charcoal/60">Requested</p><p className="text-sm font-bold">{formatDate(order.refundRequestedAt)}</p></div>
                     <div className="rounded-2xl bg-cream p-3"><p className="text-sm text-charcoal/60">Resolved</p><p className="text-sm font-bold">{formatDate(order.refundResolvedAt)}</p></div>
                   </div>
@@ -121,7 +123,7 @@ export default async function AdminRefundsPage() {
                     <p className="font-bold">Items</p>
                     <div className="mt-2 grid gap-2 text-sm text-charcoal/70">
                       {order.items.map((item) => (
-                        <p key={item.id}>{item.quantity} × {item.titleSnapshot} · ${money(item.priceSnapshot)}</p>
+                        <p key={item.id}>{item.quantity} × {item.titleSnapshot} · <CurrencyPrice amount={Number(item.priceSnapshot ?? 0)} /></p>
                       ))}
                     </div>
                   </div>

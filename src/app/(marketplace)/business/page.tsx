@@ -39,7 +39,7 @@ export default function BusinessPage() {
             ["1. Describe your project", "Tell us what you need, quantity, deadline, budget, and location."],
             ["2. Sellers review it", "Wholesale-ready sellers can review bulk and custom project requests."],
             ["3. Continue with quotes", "Use messaging and custom order workflows to agree on production and payment."]
-          ].map(([title, text]) => (
+  ].map(([title, text]) => (
             <div key={title} className="rounded-3xl border border-sand bg-white p-6 shadow-sm">
               <h2 className="text-lg font-extrabold text-charcoal">{title}</h2>
               <p className="mt-3 text-sm leading-6 text-charcoal/70">{text}</p>

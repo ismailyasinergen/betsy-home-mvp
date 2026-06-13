@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { requireSignedIn } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -8,7 +10,7 @@ function formatDate(date: Date | null) {
 }
 
 function money(value: unknown) {
-  return `$${Number(value).toFixed(2)}`;
+  return Number(value).toFixed(2);
 }
 
 export default async function AccountProjectsPage() {
@@ -101,10 +103,10 @@ export default async function AccountProjectsPage() {
                                 {quote.shopName || quote.seller.name || quote.seller.email}
                               </p>
                               <p className="mt-1 text-charcoal/70">
-                                Production: {quote.productionDays ? `${quote.productionDays} days` : "Not specified"} · Shipping: {quote.shippingPrice ? money(quote.shippingPrice) : "Not specified"}
+                                Production: {quote.productionDays ? `${quote.productionDays} days` : "Not specified"} · Shipping: {quote.shippingPrice ? <CurrencyPrice amount={Number(quote.shippingPrice)} /> : "Not specified"}
                               </p>
                             </div>
-                            <p className="text-xl font-black text-charcoal">{money(quote.totalPrice)}</p>
+                            <p className="text-xl font-black text-charcoal"><CurrencyPrice amount={Number(quote.totalPrice ?? 0)} /></p>
                           </div>
                           <p className="mt-3 leading-6 text-charcoal/70">{quote.message}</p>
                           <a href={`mailto:${quote.seller.email}?subject=${encodeURIComponent(`Betsy Home project quote: ${project.projectName}`)}`} className="mt-4 inline-flex rounded-full border border-clay px-4 py-2 text-xs font-bold text-clay">

@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { PaymentStatus, RefundRequestStatus } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -169,27 +171,27 @@ export default async function AdminPaymentsPage() {
       <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         <div className="rounded-3xl border border-sand bg-white p-5 shadow-sm">
           <p className="text-sm text-charcoal/60">Paid gross revenue</p>
-          <p className="mt-2 text-3xl font-bold">${money(paidGross)}</p>
+          <p className="mt-2 text-3xl font-bold"><CurrencyPrice amount={Number(paidGross ?? 0)} /></p>
           <p className="mt-1 text-sm text-charcoal/50">{data.paidTotals._count._all} paid orders</p>
         </div>
         <div className="rounded-3xl border border-sand bg-white p-5 shadow-sm">
           <p className="text-sm text-charcoal/60">Platform fees</p>
-          <p className="mt-2 text-3xl font-bold text-clay">${money(platformFees)}</p>
+          <p className="mt-2 text-3xl font-bold text-clay"><CurrencyPrice amount={Number(platformFees ?? 0)} /></p>
           <p className="mt-1 text-sm text-charcoal/50">Commission preview</p>
         </div>
         <div className="rounded-3xl border border-sand bg-white p-5 shadow-sm">
           <p className="text-sm text-charcoal/60">Seller net preview</p>
-          <p className="mt-2 text-3xl font-bold">${money(sellerNet)}</p>
+          <p className="mt-2 text-3xl font-bold"><CurrencyPrice amount={Number(sellerNet ?? 0)} /></p>
           <p className="mt-1 text-sm text-charcoal/50">Paid gross minus fees</p>
         </div>
         <div className="rounded-3xl border border-sand bg-white p-5 shadow-sm">
           <p className="text-sm text-charcoal/60">Pending value</p>
-          <p className="mt-2 text-3xl font-bold text-yellow-700">${money(pendingValue)}</p>
+          <p className="mt-2 text-3xl font-bold text-yellow-700"><CurrencyPrice amount={Number(pendingValue ?? 0)} /></p>
           <p className="mt-1 text-sm text-charcoal/50">{data.pendingTotals._count._all} pending orders</p>
         </div>
         <div className="rounded-3xl border border-sand bg-white p-5 shadow-sm">
           <p className="text-sm text-charcoal/60">Refunded/disputed</p>
-          <p className="mt-2 text-3xl font-bold text-red-700">${money(refundedValue)}</p>
+          <p className="mt-2 text-3xl font-bold text-red-700"><CurrencyPrice amount={Number(refundedValue ?? 0)} /></p>
           <p className="mt-1 text-sm text-charcoal/50">{data.refundedTotals._count._all} orders</p>
         </div>
       </div>
@@ -240,9 +242,9 @@ export default async function AdminPaymentsPage() {
                 {shop.stripeAccountId ? statusBadge("Connected", "green") : statusBadge("Missing", "red")}
                 <p className="mt-1 text-xs text-charcoal/50">{shop.stripeAccountId ?? "No account ID"}</p>
               </div>
-              <p className="font-bold">${money(shop.paidGross)}</p>
-              <p className="font-bold text-clay">${money(shop.platformFees)}</p>
-              <p className="font-bold">${money(shop.sellerNet)}</p>
+              <p className="font-bold"><CurrencyPrice amount={Number(shop.paidGross ?? 0)} /></p>
+              <p className="font-bold text-clay"><CurrencyPrice amount={Number(shop.platformFees ?? 0)} /></p>
+              <p className="font-bold"><CurrencyPrice amount={Number(shop.sellerNet ?? 0)} /></p>
               <div className="grid gap-1">
                 {shop.pendingOrders > 0 ? statusBadge(`${shop.pendingOrders} pending`, "yellow") : null}
                 {shop.manualFollowUps > 0 ? statusBadge(`${shop.manualFollowUps} refund follow-up`, "red") : null}
@@ -262,9 +264,9 @@ export default async function AdminPaymentsPage() {
               <div key={row.paymentStatus} className="rounded-2xl bg-cream p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   {statusBadge(row.paymentStatus, paymentTone(row.paymentStatus))}
-                  <p className="font-bold">${money(row._sum.total)}</p>
+                  <p className="font-bold"><CurrencyPrice amount={Number(row._sum.total ?? 0)} /></p>
                 </div>
-                <p className="mt-2 text-sm text-charcoal/60">{row._count._all} orders · Fees ${money(row._sum.platformFee)}</p>
+                <p className="mt-2 text-sm text-charcoal/60">{row._count._all} orders · Fees <CurrencyPrice amount={Number(row._sum.platformFee ?? 0)} /></p>
               </div>
             ))}
           </div>
@@ -277,7 +279,7 @@ export default async function AdminPaymentsPage() {
               <div key={payout.id} className="rounded-2xl bg-cream p-4">
                 <div className="flex items-center justify-between gap-3">
                   <p className="font-bold">{payout.shop.shopName}</p>
-                  <p className="font-bold">${money(payout.amount)}</p>
+                  <p className="font-bold"><CurrencyPrice amount={Number(payout.amount ?? 0)} /></p>
                 </div>
                 <p className="text-sm text-charcoal/60">{payout.status} · {shortDate(payout.createdAt)}</p>
                 {payout.stripePayoutId ? <p className="mt-1 text-xs text-charcoal/50">Stripe payout: {payout.stripePayoutId}</p> : null}
@@ -297,7 +299,7 @@ export default async function AdminPaymentsPage() {
               <div key={order.id} className="rounded-2xl bg-cream p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="font-bold">{order.orderNumber}</p>
-                  <p className="font-bold">${money(order.total)}</p>
+                  <p className="font-bold"><CurrencyPrice amount={Number(order.total ?? 0)} /></p>
                 </div>
                 <p className="text-sm text-charcoal/60">{order.shop.shopName} · {order.buyer?.email ?? "guest"} · {shortDate(order.createdAt)}</p>
                 <div className="mt-3 flex flex-wrap gap-2">

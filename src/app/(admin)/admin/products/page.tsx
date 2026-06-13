@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { ProductStatus } from "@prisma/client";
 import { getAdminProducts } from "@/lib/admin-data";
@@ -29,7 +31,7 @@ export default async function AdminProductsPage() {
                   <span className="rounded-full bg-cream px-3 py-1 text-xs font-bold text-clay">{product.status}</span>
                   {!product.shippingProfile ? <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">Missing shipping</span> : null}
                 </div>
-                <p className="mt-2 text-sm text-charcoal/60">{product.shop.shopName} · {product.category.name} · ${Number(product.salePrice ?? product.price).toFixed(2)}</p>
+                <p className="mt-2 text-sm text-charcoal/60">{product.shop.shopName} · {product.category.name} · <CurrencyPrice amount={Number(product.salePrice ?? product.price)} /></p>
                 <p className="mt-3 line-clamp-2 text-charcoal/70">{product.description}</p>
                 <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-charcoal/70">
                   <span className="rounded-full bg-cream px-3 py-1">Stock: {product.quantity}</span>

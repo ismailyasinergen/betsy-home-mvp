@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProductCard } from "@/components/product-card";
@@ -60,7 +62,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <Link href={`/shop/${product.shopSlug}`} className="text-sm font-bold text-clay">{product.shopName}</Link>
             <h1 className="mt-3 text-5xl font-bold tracking-tight">{product.title}</h1>
             <p className="mt-3 text-charcoal/70">★ {product.rating} · {product.reviewCount} reviews</p>
-            <p className="mt-6 text-4xl font-bold">${product.price.toFixed(2)}</p>
+            <p className="mt-6 text-4xl font-bold"><CurrencyPrice amount={Number(product.price)} /></p>
 
             <div className="mt-6 rounded-3xl border border-sand bg-white p-5">
               <p className="font-semibold text-sage">{getShippingRestrictionMessage(canShip)}</p>

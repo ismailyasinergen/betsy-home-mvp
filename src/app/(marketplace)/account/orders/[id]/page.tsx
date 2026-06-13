@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
@@ -16,7 +18,7 @@ type AddressPreview = {
 };
 
 function money(value: number) {
-  return `$${value.toFixed(2)}`;
+  return value.toFixed(2);
 }
 
 function formatDate(date: Date) {
@@ -70,7 +72,7 @@ export default async function CustomerOrderDetailPage({ params }: { params: Prom
           </div>
           <div className="grid gap-2 rounded-3xl border border-sand bg-white p-5 text-right shadow-sm">
             <p className="text-sm text-charcoal/60">Order total</p>
-            <p className="text-3xl font-bold">{money(Number(order.total))}</p>
+            <p className="text-3xl font-bold"><CurrencyPrice amount={Number(order.total)} /></p>
             <p className="text-sm text-charcoal/60">Payment: <span className="font-bold text-clay">{order.paymentStatus}</span></p>
             <p className="text-sm text-charcoal/60">Shipping: <span className="font-bold text-sage">{order.shippingStatus.replaceAll("_", " ")}</span></p>
             {order.buyerConfirmedAt ? <p className="text-sm font-bold text-sage">Customer confirmed delivery</p> : null}
@@ -191,7 +193,7 @@ export default async function CustomerOrderDetailPage({ params }: { params: Prom
                   </div>
                   <div className="text-right">
                     <p className="font-bold">{money(Number(item.priceSnapshot) * item.quantity)}</p>
-                    <p className="text-sm text-charcoal/55">{money(Number(item.priceSnapshot))} each</p>
+                    <p className="text-sm text-charcoal/55"><CurrencyPrice amount={Number(item.priceSnapshot)} /> each</p>
                   </div>
                 </article>
               ))}
@@ -232,10 +234,10 @@ export default async function CustomerOrderDetailPage({ params }: { params: Prom
             <section className="rounded-3xl border border-sand bg-white p-6 shadow-sm">
               <h2 className="text-xl font-bold">Payment summary</h2>
               <dl className="mt-4 grid gap-3 text-sm">
-                <div className="flex justify-between gap-4"><dt className="text-charcoal/60">Items</dt><dd className="font-semibold">{money(itemTotal)}</dd></div>
-                <div className="flex justify-between gap-4"><dt className="text-charcoal/60">Shipping</dt><dd className="font-semibold">{money(Number(order.shippingTotal))}</dd></div>
-                <div className="flex justify-between gap-4"><dt className="text-charcoal/60">Tax</dt><dd className="font-semibold">{money(Number(order.taxTotal))}</dd></div>
-                <div className="border-t border-sand pt-3 flex justify-between gap-4 text-base"><dt className="font-bold">Total</dt><dd className="font-bold">{money(Number(order.total))}</dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-charcoal/60">Items</dt><dd className="font-semibold"><CurrencyPrice amount={Number(itemTotal ?? 0)} /></dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-charcoal/60">Shipping</dt><dd className="font-semibold"><CurrencyPrice amount={Number(order.shippingTotal)} /></dd></div>
+                <div className="flex justify-between gap-4"><dt className="text-charcoal/60">Tax</dt><dd className="font-semibold"><CurrencyPrice amount={Number(order.taxTotal)} /></dd></div>
+                <div className="border-t border-sand pt-3 flex justify-between gap-4 text-base"><dt className="font-bold">Total</dt><dd className="font-bold"><CurrencyPrice amount={Number(order.total)} /></dd></div>
               </dl>
             </section>
 

@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import { PaymentStatus, ShippingStatus } from "@prisma/client";
 import { getAdminOrders } from "@/lib/admin-data";
 import { updateAdminOrderStatus } from "./actions";
@@ -25,16 +27,16 @@ export default async function AdminOrdersPage() {
                 </div>
                 <p className="mt-2 text-sm text-charcoal/60">Seller: {order.shop.shopName} · Buyer: {order.buyer?.email ?? "Guest checkout"}</p>
                 <div className="mt-4 grid gap-3 md:grid-cols-4">
-                  <div className="rounded-2xl bg-cream p-3"><p className="text-sm text-charcoal/60">Subtotal</p><p className="text-xl font-bold">${Number(order.subtotal).toFixed(2)}</p></div>
-                  <div className="rounded-2xl bg-cream p-3"><p className="text-sm text-charcoal/60">Shipping</p><p className="text-xl font-bold">${Number(order.shippingTotal).toFixed(2)}</p></div>
-                  <div className="rounded-2xl bg-cream p-3"><p className="text-sm text-charcoal/60">Platform fee</p><p className="text-xl font-bold">${Number(order.platformFee).toFixed(2)}</p></div>
-                  <div className="rounded-2xl bg-cream p-3"><p className="text-sm text-charcoal/60">Total</p><p className="text-xl font-bold">${Number(order.total).toFixed(2)}</p></div>
+                  <div className="rounded-2xl bg-cream p-3"><p className="text-sm text-charcoal/60">Subtotal</p><p className="text-xl font-bold"><CurrencyPrice amount={Number(order.subtotal)} /></p></div>
+                  <div className="rounded-2xl bg-cream p-3"><p className="text-sm text-charcoal/60">Shipping</p><p className="text-xl font-bold"><CurrencyPrice amount={Number(order.shippingTotal)} /></p></div>
+                  <div className="rounded-2xl bg-cream p-3"><p className="text-sm text-charcoal/60">Platform fee</p><p className="text-xl font-bold"><CurrencyPrice amount={Number(order.platformFee)} /></p></div>
+                  <div className="rounded-2xl bg-cream p-3"><p className="text-sm text-charcoal/60">Total</p><p className="text-xl font-bold"><CurrencyPrice amount={Number(order.total)} /></p></div>
                 </div>
                 <div className="mt-4 rounded-2xl bg-cream p-4">
                   <p className="font-bold">Items</p>
                   <div className="mt-2 grid gap-2 text-sm text-charcoal/70">
                     {order.items.map((item) => (
-                      <p key={item.id}>{item.quantity} × {item.titleSnapshot} · ${Number(item.priceSnapshot).toFixed(2)}</p>
+                      <p key={item.id}>{item.quantity} × {item.titleSnapshot} · <CurrencyPrice amount={Number(item.priceSnapshot)} /></p>
                     ))}
                   </div>
                 </div>

@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { toggleProductFavoriteAction } from "@/app/(marketplace)/account/favorites/actions";
 import { isProductFavorited } from "@/lib/favorites";
@@ -32,7 +34,7 @@ export async function ProductCard({ product }: { product: ProductCardData }) {
         </Link>
         <p className="mt-1 text-sm text-charcoal/65">by {product.shopName}</p>
         <div className="mt-3 flex items-center justify-between">
-          <p className="font-bold">${product.price.toFixed(2)}</p>
+          <p className="font-bold"><CurrencyPrice amount={Number(product.price)} /></p>
           <p className="text-sm text-charcoal/65">★ {product.rating} ({product.reviewCount})</p>
         </div>
         <p className="mt-2 text-sm text-sage">{product.shippingNote}</p>

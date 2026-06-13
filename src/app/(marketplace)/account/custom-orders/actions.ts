@@ -49,7 +49,7 @@ function buildRequestMessage(input: {
   if (input.desiredSize) lines.push(`Desired size: ${input.desiredSize}`);
   if (input.desiredColor) lines.push(`Desired color: ${input.desiredColor}`);
   if (input.quantity) lines.push(`Quantity: ${input.quantity}`);
-  if (input.budget) lines.push(`Budget: $${input.budget.toFixed(2)}`);
+  if (input.budget) lines.push(`Budget: ${input.budget.toFixed(2)} USD/EUR preference to confirm`);
   if (input.deadline) lines.push(`Deadline: ${input.deadline}`);
   if (input.shippingCountry) lines.push(`Shipping country: ${input.shippingCountry}`);
   if (input.referenceImageUrl) lines.push(`Reference image: ${input.referenceImageUrl}`);

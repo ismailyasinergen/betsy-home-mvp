@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { PaymentStatus, ProductStatus, RefundRequestStatus, ShippingStatus } from "@prisma/client";
 import { getAdminActivityData } from "@/lib/admin-data";
@@ -111,7 +113,7 @@ export default async function AdminActivityPage() {
               <div key={order.id} className="rounded-2xl bg-cream p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="font-bold">{order.orderNumber}</p>
-                  <p className="font-bold">${money(order.total)}</p>
+                  <p className="font-bold"><CurrencyPrice amount={Number(order.total ?? 0)} /></p>
                 </div>
                 <p className="mt-1 text-sm text-charcoal/60">{order.shop.shopName} · {order.buyer?.email ?? "guest"} · {shortDate(order.createdAt)}</p>
                 <div className="mt-3 flex flex-wrap gap-2">

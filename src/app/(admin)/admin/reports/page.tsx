@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { getAdminReportsData } from "@/lib/admin-data";
 import { adminReportExports } from "@/lib/admin-report-exports";
@@ -38,7 +40,7 @@ export default async function AdminReportsPage() {
       <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-3xl border border-sand bg-white p-5 shadow-sm">
           <p className="text-sm text-charcoal/60">Top-shop paid revenue</p>
-          <p className="mt-2 text-3xl font-bold">${money(paidRevenue)}</p>
+          <p className="mt-2 text-3xl font-bold"><CurrencyPrice amount={Number(paidRevenue ?? 0)} /></p>
         </div>
         <div className="rounded-3xl border border-sand bg-white p-5 shadow-sm">
           <p className="text-sm text-charcoal/60">Low-stock products</p>
@@ -90,7 +92,7 @@ export default async function AdminReportsPage() {
               <div key={shop.id} className="rounded-2xl bg-cream p-4">
                 <div className="flex items-center justify-between gap-3">
                   <p className="font-bold">{shop.shopName}</p>
-                  <p className="font-bold text-clay">${money(shop.paidRevenue)}</p>
+                  <p className="font-bold text-clay"><CurrencyPrice amount={Number(shop.paidRevenue ?? 0)} /></p>
                 </div>
                 <p className="text-sm text-charcoal/60">{shop._count.products} products · {shop._count.reviews} reviews · {shop.status}</p>
               </div>

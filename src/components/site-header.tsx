@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { signOut } from "@/lib/auth-actions";
 import { getCustomerUnreadMessageCount } from "@/lib/messages";
 import { CategoryDropdown } from "@/components/category-dropdown";
+import { CurrencySelector } from "@/components/currency-selector";
 import { prisma } from "@/lib/prisma";
 
 export async function SiteHeader() {
@@ -44,6 +45,7 @@ export async function SiteHeader() {
             Betsy Home
           </Link>
           <CategoryDropdown categories={categoryTree} />
+          <CurrencySelector />
         </div>
         <form className="hidden w-80 shrink-0 xl:block" action="/search">
           <input

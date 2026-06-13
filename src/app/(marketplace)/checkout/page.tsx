@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { CHECKOUT_COUNTRIES, getCartPageData } from "@/lib/cart";
@@ -7,7 +9,7 @@ import { getCheckoutPaymentReadiness } from "@/lib/stripe-connect";
 export const dynamic = "force-dynamic";
 
 function money(value: number) {
-  return `$${value.toFixed(2)}`;
+  return value.toFixed(2);
 }
 
 export default async function CheckoutPage({ searchParams }: { searchParams: Promise<{ country?: string; ready?: string; blocked?: string; payment?: string }> }) {
@@ -145,7 +147,7 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
                       {group.items.map((item) => (
                         <div key={item.id} className="flex justify-between gap-3">
                           <span>{item.quantity} × {item.product.title}</span>
-                          <span className="font-bold text-charcoal">{money(item.lineTotal)}</span>
+                          <span className="font-bold text-charcoal"><CurrencyPrice amount={Number(item.lineTotal ?? 0)} /></span>
                         </div>
                       ))}
                     </div>
@@ -153,9 +155,9 @@ export default async function CheckoutPage({ searchParams }: { searchParams: Pro
                 ))}
               </div>
               <div className="mt-5 grid gap-3 border-t border-sand pt-5 text-sm">
-                <div className="flex justify-between"><span>Subtotal</span><span>{money(cart.subtotal)}</span></div>
+                <div className="flex justify-between"><span>Subtotal</span><span><CurrencyPrice amount={Number(cart.subtotal ?? 0)} /></span></div>
                 <div className="flex justify-between"><span>Shipping</span><span>Calculated in Stripe/shipping step</span></div>
-                <div className="flex justify-between border-t border-sand pt-3 text-lg font-bold"><span>Total preview</span><span>{money(cart.total)}</span></div>
+                <div className="flex justify-between border-t border-sand pt-3 text-lg font-bold"><span>Total preview</span><span><CurrencyPrice amount={Number(cart.total ?? 0)} /></span></div>
               </div>
             </aside>
           </div>

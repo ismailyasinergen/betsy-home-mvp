@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import { ShopStatus } from "@prisma/client";
 import { getAdminSellers } from "@/lib/admin-data";
 import { updateShopStatus } from "./actions";
@@ -28,7 +30,7 @@ export default async function AdminSellersPage() {
                   <div className="rounded-2xl bg-cream p-3"><p className="text-charcoal/60">Products</p><p className="text-xl font-bold">{shop._count.products}</p></div>
                   <div className="rounded-2xl bg-cream p-3"><p className="text-charcoal/60">Orders</p><p className="text-xl font-bold">{shop._count.orders}</p></div>
                   <div className="rounded-2xl bg-cream p-3"><p className="text-charcoal/60">Reviews</p><p className="text-xl font-bold">{shop._count.reviews}</p></div>
-                  <div className="rounded-2xl bg-cream p-3"><p className="text-charcoal/60">Paid revenue</p><p className="text-xl font-bold">${shop.paidRevenue.toFixed(2)}</p></div>
+                  <div className="rounded-2xl bg-cream p-3"><p className="text-charcoal/60">Paid revenue</p><p className="text-xl font-bold"><CurrencyPrice amount={Number(shop.paidRevenue)} /></p></div>
                 </div>
               </div>
 

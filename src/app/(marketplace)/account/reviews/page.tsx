@@ -1,3 +1,4 @@
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { SiteHeader } from "@/components/site-header";
 import { submitProductReviewAction } from "@/app/(marketplace)/account/reviews/actions";
@@ -6,7 +7,7 @@ import { getCustomerReviewCenterData } from "@/lib/reviews";
 export const dynamic = "force-dynamic";
 
 function money(value: number) {
-  return `$${value.toFixed(2)}`;
+  return value.toFixed(2);
 }
 
 function formatDate(date: Date) {

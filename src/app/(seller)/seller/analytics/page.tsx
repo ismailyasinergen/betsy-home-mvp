@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
@@ -252,16 +254,16 @@ export default async function SellerAnalyticsPage() {
 
       <section className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {[
-          ["Paid gross revenue", money(paidGross), `${paidOrders.length} paid orders`],
+          ["Paid gross revenue", <CurrencyPrice amount={Number(paidGross)} />, `${paidOrders.length} paid orders`],
           ["Seller net preview", money(sellerNet), "Paid gross minus fees"],
           ["Platform fees", money(platformFees), "Commission preview"],
-          ["Pending value", money(pendingValue), `${pendingOrders.length} pending orders`],
-          ["Refunded value", money(refundedValue), `${refundedOrders.length} refunded orders`],
+          ["Pending value", <CurrencyPrice amount={Number(pendingValue)} />, `${pendingOrders.length} pending orders`],
+          ["Refunded value", <CurrencyPrice amount={Number(refundedValue)} />, `${refundedOrders.length} refunded orders`],
           ["Average order value", money(averageOrderValue), "Paid orders only"],
           ["Average rating", averageRating ? averageRating.toFixed(1) : "0.0", `${reviews.length} reviews`],
           ["Refund rate", `${refundRate.toFixed(1)}%`, "All shop orders"],
-        ].map(([label, value, note]) => (
-          <div key={label} className="rounded-3xl border border-clay/20 bg-white p-6">
+  ].map(([label, value, note]) => (
+          <div key={String(label)} className="rounded-3xl border border-clay/20 bg-white p-6">
             <p className="text-sm text-charcoal/60">{label}</p>
             <p className="mt-3 text-3xl font-black text-charcoal">{value}</p>
             <p className="mt-2 text-sm text-charcoal/60">{note}</p>

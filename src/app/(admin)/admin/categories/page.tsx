@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { UserRole } from "@prisma/client";
 import { requireRole } from "@/lib/auth";

@@ -1,4 +1,4 @@
-export function SectionHeader({ eyebrow, title, description }: { eyebrow?: string; title: string; description?: string }) {
+export function SectionHeader({ eyebrow, title, description }: { eyebrow?: string; title: string; description?: any }) {
   return (
     <div className="mb-6 max-w-3xl">
       {eyebrow ? <p className="mb-2 text-sm font-bold uppercase tracking-[0.22em] text-clay">{eyebrow}</p> : null}

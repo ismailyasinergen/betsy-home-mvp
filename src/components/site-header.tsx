@@ -4,17 +4,47 @@ import { marketplaceRoutes } from "@/lib/routes";
 import { getCurrentUser } from "@/lib/auth";
 import { signOut } from "@/lib/auth-actions";
 import { getCustomerUnreadMessageCount } from "@/lib/messages";
+import { CategoryDropdown } from "@/components/category-dropdown";
+import { prisma } from "@/lib/prisma";
 
 export async function SiteHeader() {
   const currentUser = await getCurrentUser();
   const unreadMessages = currentUser?.role === UserRole.CUSTOMER ? await getCustomerUnreadMessageCount() : 0;
+  const categoryTree = await prisma.category.findMany({
+    where: { parentId: null },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      children: {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          children: {
+            select: {
+              id: true,
+              name: true,
+              slug: true
+            },
+            orderBy: { name: "asc" }
+          }
+        },
+        orderBy: { name: "asc" }
+      }
+    },
+    orderBy: { name: "asc" }
+  });
 
   return (
     <header className="border-b border-sand/70 bg-cream/95 backdrop-blur">
       <div className="container-page flex min-h-20 items-center gap-6 py-4">
-        <Link href="/" className="text-2xl font-bold tracking-tight text-clay">
-          Betsy Home
-        </Link>
+        <div className="flex shrink-0 items-center gap-3">
+          <Link href="/" className="text-2xl font-bold tracking-tight text-clay">
+            Betsy Home
+          </Link>
+          <CategoryDropdown categories={categoryTree} />
+        </div>
         <form className="hidden w-80 shrink-0 xl:block" action="/search">
           <input
             name="q"
@@ -23,7 +53,7 @@ export async function SiteHeader() {
           />
         </form>
         <nav className="hidden items-center gap-4 text-sm font-medium lg:flex">
-          {marketplaceRoutes.map((route) => (
+          {marketplaceRoutes.filter((route) => route.label !== "Categories").map((route) => (
             <Link key={route.href} href={route.href} className="hover:text-clay">
               {route.label}
             </Link>

@@ -1,5 +1,5 @@
 export const marketplaceRoutes = [
-  { label: "Categories", href: "/category/wall-art" },
+  { label: "Categories", href: "/category/home-living" },
   { label: "Rooms", href: "/room/living-room" },
   { label: "Styles", href: "/style/boho" },
   { label: "Boards", href: "/boards" },

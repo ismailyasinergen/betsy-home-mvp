@@ -24,7 +24,9 @@ export function CategoryDropdown({ categories }: { categories: CategoryNode[] })
   const [expandedId, setExpandedId] = useState<string | null>(
     categories[0]?.id ?? null
   );
+
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const switchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const activeCategory =
     categories.find((category) => category.id === expandedId) ?? categories[0];
@@ -45,7 +47,7 @@ export function CategoryDropdown({ categories }: { categories: CategoryNode[] })
 
     closeTimer.current = setTimeout(() => {
       setOpen(false);
-    }, 180);
+    }, 220);
   }
 
   function closeMenuNow() {
@@ -54,7 +56,31 @@ export function CategoryDropdown({ categories }: { categories: CategoryNode[] })
       closeTimer.current = null;
     }
 
+    if (switchTimer.current) {
+      clearTimeout(switchTimer.current);
+      switchTimer.current = null;
+    }
+
     setOpen(false);
+  }
+
+  function previewCategory(categoryId: string) {
+    if (switchTimer.current) {
+      clearTimeout(switchTimer.current);
+    }
+
+    switchTimer.current = setTimeout(() => {
+      setExpandedId(categoryId);
+    }, 260);
+  }
+
+  function selectCategory(categoryId: string) {
+    if (switchTimer.current) {
+      clearTimeout(switchTimer.current);
+      switchTimer.current = null;
+    }
+
+    setExpandedId(categoryId);
   }
 
   return (
@@ -75,13 +101,13 @@ export function CategoryDropdown({ categories }: { categories: CategoryNode[] })
 
       {open ? (
         <div
-          className="absolute left-0 top-full z-50 w-[min(92vw,820px)] pt-2"
+          className="absolute left-0 top-full z-50 w-[min(92vw,900px)] pt-2"
           onMouseEnter={openMenu}
           onMouseLeave={closeMenuSoon}
         >
-          <div className="rounded-[2rem] border border-sand bg-white p-4 shadow-2xl">
-            <div className="grid gap-4 md:grid-cols-[240px_1fr]">
-              <div className="grid gap-2 border-b border-sand pb-3 md:border-b-0 md:border-r md:pb-0 md:pr-3">
+          <div className="max-h-[76vh] overflow-hidden rounded-[2rem] border border-sand bg-white p-4 shadow-2xl">
+            <div className="grid max-h-[70vh] gap-4 md:grid-cols-[250px_1fr]">
+              <div className="grid content-start gap-2 overflow-y-auto border-b border-sand pb-3 pr-1 md:border-b-0 md:border-r md:pb-0 md:pr-3">
                 {categories.length === 0 ? (
                   <p className="px-3 py-2 text-sm text-charcoal/60">
                     No categories yet.
@@ -89,12 +115,12 @@ export function CategoryDropdown({ categories }: { categories: CategoryNode[] })
                 ) : null}
 
                 {categories.map((category) => (
-                  <Link
+                  <button
                     key={category.id}
-                    href={`/category/${category.slug}`}
-                    onMouseEnter={() => setExpandedId(category.id)}
-                    onFocus={() => setExpandedId(category.id)}
-                    onClick={closeMenuNow}
+                    type="button"
+                    onMouseEnter={() => previewCategory(category.id)}
+                    onFocus={() => selectCategory(category.id)}
+                    onClick={() => selectCategory(category.id)}
                     className={
                       activeCategory?.id === category.id
                         ? "flex items-center justify-between rounded-2xl bg-cream px-3 py-3 text-left text-sm font-extrabold text-clay"
@@ -103,14 +129,14 @@ export function CategoryDropdown({ categories }: { categories: CategoryNode[] })
                   >
                     <span>{category.name}</span>
                     <span aria-hidden="true">›</span>
-                  </Link>
+                  </button>
                 ))}
               </div>
 
-              <div className="min-h-64">
+              <div className="min-h-64 overflow-y-auto pr-1">
                 {activeCategory ? (
                   <div>
-                    <div className="flex items-center justify-between gap-4">
+                    <div className="sticky top-0 z-10 flex items-center justify-between gap-4 bg-white pb-4">
                       <div>
                         <p className="text-xs font-bold uppercase tracking-[0.25em] text-clay">
                           Browse
@@ -129,7 +155,7 @@ export function CategoryDropdown({ categories }: { categories: CategoryNode[] })
                       </Link>
                     </div>
 
-                    <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-4 sm:grid-cols-2">
                       {activeCategory.children.map((child) => (
                         <div
                           key={child.id}

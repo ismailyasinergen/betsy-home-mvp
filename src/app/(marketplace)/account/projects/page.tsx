@@ -70,6 +70,12 @@ export default async function AccountProjectsPage() {
                       Needed by: <strong className="text-charcoal">{formatDate(project.neededBy)}</strong>
                     </div>
                     <Link
+                      href={`/account/projects/${project.id}`}
+                      className="rounded-full bg-charcoal px-5 py-3 text-center text-sm font-bold text-white"
+                    >
+                      View request
+                    </Link>
+                    <Link
                       href={`/account/projects/${project.id}/edit`}
                       className="rounded-full border border-clay px-5 py-3 text-center text-sm font-bold text-clay"
                     >

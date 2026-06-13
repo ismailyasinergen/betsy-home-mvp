@@ -34,7 +34,7 @@ export async function createBusinessProjectRequest(formData: FormData) {
     redirect("/business/request?error=missing");
   }
 
-  await prisma.businessProjectRequest.create({
+  const project = await prisma.businessProjectRequest.create({
     data: {
       buyerId: user.id,
       projectName,
@@ -49,5 +49,5 @@ export async function createBusinessProjectRequest(formData: FormData) {
     }
   });
 
-  redirect("/account/projects?created=1");
+  redirect(`/account/projects/${project.id}?created=1`);
 }

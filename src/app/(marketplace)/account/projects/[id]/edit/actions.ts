@@ -70,5 +70,5 @@ export async function updateBusinessProjectRequest(projectId: string, formData: 
   revalidatePath("/seller/project-requests");
   revalidatePath("/admin/project-requests");
 
-  redirect("/account/projects?updated=1");
+  redirect(`/account/projects/${projectId}?updated=1`);
 }

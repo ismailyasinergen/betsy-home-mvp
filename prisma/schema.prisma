@@ -547,6 +547,7 @@ model BusinessProjectRequest {
   categories      String[]
   quantitySummary String
   message         String
+  referenceMedia  Json?      @default("[]")
   status          BusinessProjectStatus  @default(SUBMITTED)
   quotes          BusinessProjectQuote[]
   createdAt       DateTime               @default(now())

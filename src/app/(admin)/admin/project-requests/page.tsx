@@ -1,3 +1,4 @@
+import { ReferenceMediaGallery } from "@/components/reference-media-gallery";
 import { UserRole } from "@prisma/client";
 import { requireRole } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";

@@ -1,3 +1,4 @@
+import { ReferenceMediaGallery } from "@/components/reference-media-gallery";
 import type { ReactNode } from "react";
 import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";

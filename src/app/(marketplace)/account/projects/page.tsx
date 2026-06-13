@@ -1,3 +1,4 @@
+import { ReferenceMediaGallery } from "@/components/reference-media-gallery";
 import type { ReactNode } from "react";
 import { CurrencyPrice } from "@/components/currency-price";
 import Link from "next/link";
@@ -66,6 +67,7 @@ export default async function AccountProjectsPage() {
                     <h2 className="mt-2 text-xl font-extrabold text-charcoal">{project.projectName}</h2>
                     <p className="mt-2 text-sm text-charcoal/70">{project.quantitySummary}</p>
                     <p className="mt-3 text-sm leading-6 text-charcoal/70">{project.message}</p>
+                  <ReferenceMediaGallery media={(project as any).referenceMedia} className="mt-4" />
                   </div>
                   <div className="flex flex-col gap-3">
                     <div className="rounded-2xl bg-cream px-4 py-3 text-sm text-charcoal/70">

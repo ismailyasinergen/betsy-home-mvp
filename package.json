@@ -20,6 +20,7 @@
     "@prisma/client": "^6.19.3",
     "@stripe/stripe-js": "latest",
     "@supabase/supabase-js": "latest",
+    "@vercel/blob": "^2.4.0",
     "next": "latest",
     "qrcode": "latest",
     "react": "latest",

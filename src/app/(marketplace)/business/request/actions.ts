@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { requireSignedIn } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { uploadBusinessRequestMedia } from "@/lib/business-request-media";
 
 function text(formData: FormData, key: string) {
   return String(formData.get(key) ?? "").trim();
@@ -33,6 +34,8 @@ export async function createBusinessProjectRequest(formData: FormData) {
   if (!projectName || !quantitySummary || !message) {
     redirect("/business/request?error=missing");
   }
+
+  const referenceMedia = await uploadBusinessRequestMedia(formData);
 
   const project = await prisma.businessProjectRequest.create({
     data: {

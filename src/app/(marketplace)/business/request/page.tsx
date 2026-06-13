@@ -1,4 +1,5 @@
 import { createBusinessProjectRequest } from "./actions";
+import { BusinessRequestMediaInput } from "@/components/business-request-media-input";
 import { SiteHeader } from "@/components/site-header";
 
 export default function BusinessRequestPage() {
@@ -19,7 +20,7 @@ export default function BusinessRequestPage() {
             design projects.
           </p>
 
-          <form action={createBusinessProjectRequest} className="mt-8 space-y-5">
+          <form action={createBusinessProjectRequest} encType="multipart/form-data" className="mt-8 space-y-5">
             <label className="block">
               <span className="text-sm font-bold text-charcoal">Project name *</span>
               <input name="projectName" required className="mt-2 w-full rounded-2xl border border-sand px-4 py-3" placeholder="Boutique hotel lobby refresh" />

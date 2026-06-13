@@ -1,3 +1,4 @@
+import { ReferenceMediaGallery } from "@/components/reference-media-gallery";
 import { UserRole } from "@prisma/client";
 import { requireRole } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -66,6 +67,7 @@ export default async function SellerProjectRequestsPage() {
                   </p>
                   <p className="mt-3 text-sm font-bold text-charcoal">Quantity: {project.quantitySummary}</p>
                   <p className="mt-3 text-sm leading-6 text-charcoal/70">{project.message}</p>
+                  <ReferenceMediaGallery media={(project as any).referenceMedia} className="mt-4" />
 
                   {project.categories.length > 0 ? (
                     <div className="mt-4 flex flex-wrap gap-2">

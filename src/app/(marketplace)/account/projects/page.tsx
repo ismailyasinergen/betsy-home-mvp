@@ -65,8 +65,16 @@ export default async function AccountProjectsPage() {
                     <p className="mt-2 text-sm text-charcoal/70">{project.quantitySummary}</p>
                     <p className="mt-3 text-sm leading-6 text-charcoal/70">{project.message}</p>
                   </div>
-                  <div className="rounded-2xl bg-cream px-4 py-3 text-sm text-charcoal/70">
-                    Needed by: <strong className="text-charcoal">{formatDate(project.neededBy)}</strong>
+                  <div className="flex flex-col gap-3">
+                    <div className="rounded-2xl bg-cream px-4 py-3 text-sm text-charcoal/70">
+                      Needed by: <strong className="text-charcoal">{formatDate(project.neededBy)}</strong>
+                    </div>
+                    <Link
+                      href={`/account/projects/${project.id}/edit`}
+                      className="rounded-full border border-clay px-5 py-3 text-center text-sm font-bold text-clay"
+                    >
+                      Edit request
+                    </Link>
                   </div>
                 </div>
 

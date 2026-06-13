@@ -15,7 +15,7 @@ export async function SiteHeader() {
         <Link href="/" className="text-2xl font-bold tracking-tight text-clay">
           Betsy Home
         </Link>
-        <form className="hidden flex-1 md:block" action="/search">
+        <form className="hidden w-80 shrink-0 xl:block" action="/search">
           <input
             name="q"
             className="w-full rounded-full border border-sand bg-white px-5 py-3 shadow-sm outline-none transition focus:border-clay"
@@ -28,9 +28,7 @@ export async function SiteHeader() {
               {route.label}
             </Link>
           ))}
-          <Link href="/business" className="hover:text-clay">
-            Business
-          </Link>
+
         </nav>
         <div className="ml-auto flex items-center gap-3 text-sm font-semibold">
           {currentUser ? (

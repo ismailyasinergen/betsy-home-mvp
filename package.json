@@ -13,7 +13,8 @@
     "seed": "tsx prisma/seed.ts",
     "readiness": "node scripts/check-production-readiness.cjs",
     "notifications:test": "node -e \"fetch('http://localhost:3000/api/notifications/test').then(r=>r.text()).then(console.log)\"",
-    "notifications:event": "node scripts/test-notification-event.cjs"
+    "notifications:event": "node scripts/test-notification-event.cjs",
+    "seed:home-taxonomy": "node prisma/seed-home-taxonomy.js"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",

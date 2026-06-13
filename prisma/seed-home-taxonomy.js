@@ -6,6 +6,7 @@ function slugify(value) {
   return String(value)
     .toLowerCase()
     .replace(/&/g, "and")
+    .replace(/'/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
@@ -190,9 +191,25 @@ async function upsertCategory(name, parentId = null) {
   });
 }
 
+async function moveLegacyCategory(slug, parentSlug) {
+  const [category, parent] = await Promise.all([
+    prisma.category.findUnique({ where: { slug } }),
+    prisma.category.findUnique({ where: { slug: parentSlug } })
+  ]);
+
+  if (!category || !parent) return;
+
+  if (category.parentId !== parent.id) {
+    await prisma.category.update({
+      where: { id: category.id },
+      data: { parentId: parent.id }
+    });
+  }
+}
+
 async function main() {
   for (const top of taxonomy) {
-    const topCategory = await upsertCategory(top.name);
+    const topCategory = await upsertCategory(top.name, null);
 
     for (const sub of top.children) {
       const subCategory = await upsertCategory(sub.name, topCategory.id);
@@ -203,7 +220,13 @@ async function main() {
     }
   }
 
-  console.log("Home taxonomy seeded successfully.");
+  // Keep old starter categories out of the top-level dropdown without deleting them.
+  await moveLegacyCategory("wall-art", "wall-decor");
+  await moveLegacyCategory("candles", "candles-and-home-fragrances");
+  await moveLegacyCategory("ceramics", "home-decor");
+  await moveLegacyCategory("picture-frames", "picture-frames-and-displays");
+
+  console.log("Deduplicated home taxonomy seeded successfully.");
 }
 
 main()

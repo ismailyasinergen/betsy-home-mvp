@@ -71,7 +71,7 @@ export function CategoryDropdown({ categories }: { categories: CategoryNode[] })
 
     switchTimer.current = setTimeout(() => {
       setExpandedId(categoryId);
-    }, 260);
+    }, 220);
   }
 
   function selectCategory(categoryId: string) {
@@ -101,13 +101,13 @@ export function CategoryDropdown({ categories }: { categories: CategoryNode[] })
 
       {open ? (
         <div
-          className="absolute left-0 top-full z-50 w-[min(92vw,900px)] pt-2"
+          className="absolute left-0 top-full z-50 w-[min(96vw,1120px)] pt-2"
           onMouseEnter={openMenu}
           onMouseLeave={closeMenuSoon}
         >
-          <div className="max-h-[76vh] overflow-hidden rounded-[2rem] border border-sand bg-white p-4 shadow-2xl">
-            <div className="grid max-h-[70vh] gap-4 md:grid-cols-[250px_1fr]">
-              <div className="grid content-start gap-2 overflow-y-auto border-b border-sand pb-3 pr-1 md:border-b-0 md:border-r md:pb-0 md:pr-3">
+          <div className="max-h-[84vh] overflow-hidden rounded-[2rem] border border-sand bg-white p-4 shadow-2xl">
+            <div className="grid max-h-[78vh] gap-4 md:grid-cols-[170px_minmax(0,1fr)]">
+              <div className="grid content-start gap-1 overflow-y-auto border-b border-sand pb-3 pr-1 md:border-b-0 md:border-r md:pb-0 md:pr-3">
                 {categories.length === 0 ? (
                   <p className="px-3 py-2 text-sm text-charcoal/60">
                     No categories yet.
@@ -123,11 +123,11 @@ export function CategoryDropdown({ categories }: { categories: CategoryNode[] })
                     onClick={() => selectCategory(category.id)}
                     className={
                       activeCategory?.id === category.id
-                        ? "flex items-center justify-between rounded-2xl bg-cream px-3 py-3 text-left text-sm font-extrabold text-clay"
-                        : "flex items-center justify-between rounded-2xl px-3 py-3 text-left text-sm font-bold text-charcoal hover:bg-cream hover:text-clay"
+                        ? "flex items-center justify-between rounded-2xl bg-cream px-3 py-2.5 text-left text-sm font-extrabold text-clay"
+                        : "flex items-center justify-between rounded-2xl px-3 py-2.5 text-left text-sm font-bold text-charcoal hover:bg-cream hover:text-clay"
                     }
                   >
-                    <span>{category.name}</span>
+                    <span className="leading-tight">{category.name}</span>
                     <span aria-hidden="true">›</span>
                   </button>
                 ))}
@@ -149,41 +149,41 @@ export function CategoryDropdown({ categories }: { categories: CategoryNode[] })
                       <Link
                         href={`/category/${activeCategory.slug}`}
                         onClick={closeMenuNow}
-                        className="rounded-full bg-charcoal px-4 py-2 text-xs font-bold text-white"
+                        className="shrink-0 rounded-full bg-charcoal px-4 py-2 text-xs font-bold text-white"
                       >
                         View all
                       </Link>
                     </div>
 
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
                       {activeCategory.children.map((child) => (
                         <div
                           key={child.id}
-                          className="rounded-3xl border border-sand bg-cream/60 p-4"
+                          className="rounded-2xl border border-sand bg-cream/60 p-3"
                         >
                           <Link
                             href={`/category/${child.slug}`}
                             onClick={closeMenuNow}
-                            className="font-extrabold text-charcoal hover:text-clay"
+                            className="text-sm font-extrabold text-charcoal hover:text-clay"
                           >
                             {child.name}
                           </Link>
 
                           {child.children.length > 0 ? (
-                            <div className="mt-3 grid gap-2">
+                            <div className="mt-2 grid gap-1.5">
                               {child.children.map((grandchild) => (
                                 <Link
                                   key={grandchild.id}
                                   href={`/category/${grandchild.slug}`}
                                   onClick={closeMenuNow}
-                                  className="text-sm text-charcoal/65 hover:text-clay"
+                                  className="text-xs leading-5 text-charcoal/65 hover:text-clay"
                                 >
                                   {grandchild.name}
                                 </Link>
                               ))}
                             </div>
                           ) : (
-                            <p className="mt-3 text-sm text-charcoal/50">
+                            <p className="mt-2 text-xs text-charcoal/50">
                               No subcategories.
                             </p>
                           )}

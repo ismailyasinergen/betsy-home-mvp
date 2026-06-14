@@ -11,11 +11,17 @@ type PreviewItem = {
   kind: "image" | "video";
   size: number;
   duration?: number;
+  signature: string;
 };
+
+function fileSignature(file: File) {
+  return `${file.name}-${file.size}-${file.lastModified}`;
+}
 
 export function BusinessRequestMediaInput() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [message, setMessage] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<PreviewItem[]>([]);
 
   useEffect(() => {
@@ -24,65 +30,123 @@ export function BusinessRequestMediaInput() {
     };
   }, [previews]);
 
-  async function validateFiles(files: FileList | null) {
-    previews.forEach((item) => URL.revokeObjectURL(item.url));
-    setPreviews([]);
+  async function handleFiles(fileList: FileList | null) {
     setMessage("");
 
-    if (!files || files.length === 0) return;
+    if (!fileList || fileList.length === 0) return;
 
-    if (files.length > MAX_FILES) {
+    const incomingFiles = Array.from(fileList);
+    const existingSignatures = new Set(selectedFiles.map(fileSignature));
+
+    const mergedFiles = [
+      ...selectedFiles,
+      ...incomingFiles.filter((file) => !existingSignatures.has(fileSignature(file)))
+    ];
+
+    if (mergedFiles.length > MAX_FILES) {
       setMessage(`You can upload up to ${MAX_FILES} reference files.`);
-      if (inputRef.current) inputRef.current.value = "";
+      syncInputFiles(selectedFiles);
       return;
     }
 
-    const nextPreviews: PreviewItem[] = [];
+    const validation = await validateFiles(mergedFiles);
 
-    for (const file of Array.from(files)) {
+    if (!validation.ok) {
+      setMessage(validation.message);
+      syncInputFiles(selectedFiles);
+      return;
+    }
+
+    previews.forEach((item) => URL.revokeObjectURL(item.url));
+
+    const nextPreviews = await Promise.all(
+      mergedFiles.map(async (file) => {
+        const url = URL.createObjectURL(file);
+        const isVideo = file.type.startsWith("video/");
+        const duration = isVideo ? await getVideoDuration(file, url) : undefined;
+
+        return {
+          name: file.name,
+          url,
+          kind: isVideo ? "video" as const : "image" as const,
+          size: file.size,
+          duration,
+          signature: fileSignature(file)
+        };
+      })
+    );
+
+    setSelectedFiles(mergedFiles);
+    setPreviews(nextPreviews);
+    syncInputFiles(mergedFiles);
+
+    setMessage(
+      `${mergedFiles.length} reference file${mergedFiles.length === 1 ? "" : "s"} selected.`
+    );
+  }
+
+  async function validateFiles(files: File[]) {
+    for (const file of files) {
       if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) {
-        setMessage("Only image and video reference files are allowed.");
-        if (inputRef.current) inputRef.current.value = "";
-        nextPreviews.forEach((item) => URL.revokeObjectURL(item.url));
-        return;
+        return {
+          ok: false,
+          message: "Only image and video reference files are allowed."
+        };
       }
 
-      const url = URL.createObjectURL(file);
-
       if (file.type.startsWith("video/")) {
-        const duration = await getVideoDuration(file, url);
+        const duration = await getVideoDuration(file);
 
         if (duration > MAX_VIDEO_SECONDS) {
-          setMessage(`${file.name} is longer than 3 minutes. Please upload a shorter video.`);
-          if (inputRef.current) inputRef.current.value = "";
-          URL.revokeObjectURL(url);
-          nextPreviews.forEach((item) => URL.revokeObjectURL(item.url));
-          return;
+          return {
+            ok: false,
+            message: `${file.name} is longer than 3 minutes. Please upload a shorter video.`
+          };
         }
-
-        nextPreviews.push({
-          name: file.name,
-          url,
-          kind: "video",
-          size: file.size,
-          duration
-        });
-      } else {
-        nextPreviews.push({
-          name: file.name,
-          url,
-          kind: "image",
-          size: file.size
-        });
       }
     }
 
-    setPreviews(nextPreviews);
-    setMessage(`${files.length} reference file${files.length === 1 ? "" : "s"} selected.`);
+    return { ok: true, message: "" };
+  }
+
+  function syncInputFiles(files: File[]) {
+    if (!inputRef.current) return;
+
+    const dataTransfer = new DataTransfer();
+
+    for (const file of files) {
+      dataTransfer.items.add(file);
+    }
+
+    inputRef.current.files = dataTransfer.files;
+  }
+
+  function removeFile(signature: string) {
+    const remainingFiles = selectedFiles.filter(
+      (file) => fileSignature(file) !== signature
+    );
+
+    const removedPreview = previews.find((item) => item.signature === signature);
+    if (removedPreview) {
+      URL.revokeObjectURL(removedPreview.url);
+    }
+
+    const remainingPreviews = previews.filter((item) => item.signature !== signature);
+
+    setSelectedFiles(remainingFiles);
+    setPreviews(remainingPreviews);
+    syncInputFiles(remainingFiles);
+
+    setMessage(
+      remainingFiles.length > 0
+        ? `${remainingFiles.length} reference file${remainingFiles.length === 1 ? "" : "s"} selected.`
+        : ""
+    );
   }
 
   function clearFiles() {
     previews.forEach((item) => URL.revokeObjectURL(item.url));
+    setSelectedFiles([]);
     setPreviews([]);
     setMessage("");
 
@@ -98,7 +162,7 @@ export function BusinessRequestMediaInput() {
           Reference photos or videos
         </span>
         <span className="mt-1 block text-sm text-charcoal/60">
-          Upload sample photos or videos. Videos must be 3 minutes or shorter.
+          Upload up to {MAX_FILES} reference files. You can select multiple files at once or add them one by one.
         </span>
 
         <input
@@ -107,7 +171,7 @@ export function BusinessRequestMediaInput() {
           type="file"
           multiple
           accept="image/*,video/*"
-          onChange={(event) => validateFiles(event.target.files)}
+          onChange={(event) => handleFiles(event.target.files)}
           className="mt-4 block w-full rounded-2xl border border-sand bg-white px-4 py-3 text-sm"
         />
       </label>
@@ -128,14 +192,14 @@ export function BusinessRequestMediaInput() {
               onClick={clearFiles}
               className="rounded-full border border-clay px-4 py-2 text-xs font-bold text-clay"
             >
-              Clear files
+              Clear all
             </button>
           </div>
 
           <div className="mt-3 grid gap-4 sm:grid-cols-2">
             {previews.map((item) => (
               <div
-                key={item.url}
+                key={item.signature}
                 className="overflow-hidden rounded-3xl border border-sand bg-white shadow-sm"
               >
                 {item.kind === "image" ? (
@@ -164,6 +228,14 @@ export function BusinessRequestMediaInput() {
                       ? ` · ${formatDuration(item.duration)}`
                       : ""}
                   </p>
+
+                  <button
+                    type="button"
+                    onClick={() => removeFile(item.signature)}
+                    className="mt-3 rounded-full border border-red-200 px-3 py-1 text-xs font-bold text-red-600"
+                  >
+                    Remove
+                  </button>
                 </div>
               </div>
             ))}
